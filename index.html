@@ -184,9 +184,10 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
-            z-index: 1002;
+            z-index: 1003;
             justify-content: center;
             align-items: center;
+            pointer-events: auto;
         }
 
         .modal-content {
@@ -707,6 +708,7 @@
 
         request.onerror = function(event) {
             console.error('IndexedDB error:', event.target.errorCode);
+            alert('Failed to initialize database. Please try again.');
         };
 
         // Particles.js
@@ -738,24 +740,40 @@
                 const request = store.get(username);
                 request.onsuccess = function(event) {
                     currentUser = event.target.result;
-                    document.getElementById('accountBtn').innerHTML = `<i class="fas fa-user"></i> ${currentUser.username}`;
-                    updateDropdown();
-                    document.body.classList.remove('inaccessible');
-                    document.getElementById('hero').classList.remove('inaccessible');
-                    document.getElementById('content').style.display = 'block';
-                    document.getElementById('upload-section').style.display = 'block';
-                    document.getElementById('navLinks').style.display = 'flex';
-                    renderGallery();
-                    scrollToContent();
+                    if (currentUser) {
+                        document.getElementById('accountBtn').innerHTML = `<i class="fas fa-user"></i> ${currentUser.username}`;
+                        updateDropdown();
+                        document.body.classList.remove('inaccessible');
+                        document.getElementById('hero').classList.remove('inaccessible');
+                        document.getElementById('content').style.display = 'block';
+                        document.getElementById('upload-section').style.display = 'block';
+                        document.getElementById('navLinks').style.display = 'flex';
+                        renderGallery();
+                        scrollToContent();
+                    } else {
+                        localStorage.removeItem('currentUser');
+                        showModal('login');
+                        lockPage();
+                    }
+                };
+                request.onerror = function(event) {
+                    console.error('Error fetching user:', event.target.error);
+                    showModal('login');
+                    lockPage();
                 };
             } else {
                 showModal('login');
-                document.body.classList.add('inaccessible');
-                document.getElementById('hero').classList.add('inaccessible');
-                document.getElementById('content').style.display = 'none';
-                document.getElementById('upload-section').style.display = 'none';
-                document.getElementById('navLinks').style.display = 'none';
+                lockPage();
             }
+        }
+
+        function lockPage() {
+            document.body.classList.add('inaccessible');
+            document.getElementById('hero').classList.add('inaccessible');
+            document.getElementById('content').style.display = 'none';
+            document.getElementById('upload-section').style.display = 'none';
+            document.getElementById('navLinks').style.display = 'none';
+            document.getElementById('gallery').innerHTML = '';
         }
 
         function updateDropdown() {
@@ -805,6 +823,10 @@
                     error.textContent = 'Invalid credentials';
                 }
             };
+            request.onerror = function(event) {
+                console.error('Login error:', event.target.error);
+                error.textContent = 'Error logging in. Please try again.';
+            };
         }
 
         function signup() {
@@ -827,8 +849,8 @@
                 if (event.target.result) {
                     error.textContent = 'Username already exists';
                 } else {
-                    store.add({ username, password });
-                    transaction.oncomplete = function() {
+                    const addRequest = store.add({ username, password });
+                    addRequest.onsuccess = function() {
                         currentUser = { username, password };
                         localStorage.setItem('currentUser', username);
                         document.getElementById('accountBtn').innerHTML = `<i class="fas fa-user"></i> ${username}`;
@@ -842,7 +864,15 @@
                         renderGallery();
                         scrollToContent();
                     };
+                    addRequest.onerror = function(event) {
+                        console.error('Signup error:', event.target.error);
+                        error.textContent = 'Error signing up. Please try again.';
+                    };
                 }
+            };
+            request.onerror = function(event) {
+                console.error('Signup check error:', event.target.error);
+                error.textContent = 'Error checking username. Please try again.';
             };
         }
 
@@ -853,12 +883,7 @@
             document.getElementById('accountDropdown').style.display = 'none';
             updateDropdown();
             showModal('login');
-            document.body.classList.add('inaccessible');
-            document.getElementById('hero').classList.add('inaccessible');
-            document.getElementById('content').style.display = 'none';
-            document.getElementById('upload-section').style.display = 'none';
-            document.getElementById('navLinks').style.display = 'none';
-            document.getElementById('gallery').innerHTML = '';
+            lockPage();
         }
 
         function showProfile() {
@@ -899,13 +924,22 @@
         // Modals
         function showModal(type) {
             document.getElementById(`${type}Modal`).style.display = 'flex';
+            document.getElementById(`${type}Username`)?.focus();
         }
 
         function closeModal(type) {
             document.getElementById(`${type}Modal`).style.display = 'none';
             document.getElementById(`${type}Error`).textContent = '';
-            document.getElementById(`${type}Username`).classList.remove('valid', 'invalid');
-            document.getElementById(`${type}Password`).classList.remove('valid', 'invalid');
+            const usernameInput = document.getElementById(`${type}Username`);
+            const passwordInput = document.getElementById(`${type}Password`);
+            if (usernameInput) {
+                usernameInput.value = '';
+                usernameInput.classList.remove('valid', 'invalid');
+            }
+            if (passwordInput) {
+                passwordInput.value = '';
+                passwordInput.classList.remove('valid', 'invalid');
+            }
         }
 
         // Navbar Toggle
@@ -1147,7 +1181,7 @@
                         renderGallery();
                     };
                 } else {
-                    store.add({ media二手Id, user: currentUser.username });
+                    store.add({ mediaId, user: currentUser.username });
                     transaction.oncomplete = function() {
                         renderGallery();
                     };
