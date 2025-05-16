@@ -175,6 +175,79 @@
             transform: translateX(5px);
         }
 
+        .navbar .user-indicator {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #003087, #007bff);
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .navbar .user-indicator:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+        }
+
+        .navbar .settings-btn {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #003087, #007bff);
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .navbar .settings-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+            background: linear-gradient(45deg, #007bff, #00c6ff);
+        }
+
+        .navbar .settings-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 123, 255, 0.3);
+            border-radius: 15px;
+            padding: 12px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            min-width: 160px;
+            margin-top: 8px;
+        }
+
+        .navbar .settings-btn.active + .settings-dropdown {
+            display: block;
+            animation: slideIn 0.3s ease-in;
+        }
+
+        .navbar .settings-dropdown a {
+            display: block;
+            padding: 10px 20px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .navbar .settings-dropdown a:hover {
+            background: rgba(0, 123, 255, 0.3);
+            color: #00c6ff;
+            transform: translateX(5px);
+        }
+
         /* Modal */
         .modal {
             display: none;
@@ -294,6 +367,64 @@
             margin-top: 10px;
         }
 
+        .modal-content .switch-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 20px;
+            background: linear-gradient(45deg, #007bff, #00c6ff);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .modal-content .switch-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+        }
+
+        .modal-content .login-notice {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 123, 255, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #ff4d4d;
+            animation: slideIn 0.3s ease-in;
+        }
+
+        .modal-content .login-notice.active {
+            display: block;
+        }
+
+        .modal-content .password-suggestion {
+            font-size: 0.8rem;
+            color: #00c6ff;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+
+        .modal-content .generate-password {
+            padding: 8px 15px;
+            background: linear-gradient(45deg, #003087, #007bff);
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .modal-content .generate-password:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+        }
+
         /* Hero */
         .hero {
             position: relative;
@@ -365,7 +496,7 @@
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
-            margin-top: 100vh; /* Start below hero */
+            margin-top: 100vh;
             animation: fadeInUp 1s ease;
             z-index: 1;
         }
@@ -595,8 +726,16 @@
             <div class="account-dropdown" id="accountDropdown">
                 <a href="#" id="loginLink" onclick="showModal('login')">Login</a>
                 <a href="#" id="signupLink" onclick="showModal('signup')">Sign Up</a>
-                <a href="#" id="profileLink" onclick="showProfile()">Profile</a>
-                <a href="#" id="logoutLink" onclick="logout()">Logout</a>
+            </div>
+            <div class="user-indicator" id="userIndicator" style="display: none;">
+                <i class="fas fa-user"></i> Logged in as <span id="loggedInUsername"></span>
+            </div>
+            <button class="settings-btn" id="settingsBtn" style="display: none;"><i class="fas fa-cog"></i> Settings</button>
+            <div class="settings-dropdown" id="settingsDropdown">
+                <a href="#" onclick="showModal('changePassword')">Change Password</a>
+                <a href="#" onclick="alert('Theme switching coming soon!')">Theme</a>
+                <a href="#" onclick="alert('Account info coming soon!')">Account Info</a>
+                <a href="#" onclick="logout()">Logout</a>
             </div>
         </div>
     </div>
@@ -645,7 +784,9 @@
                     <i class="fas fa-lock"></i>
                 </div>
                 <button onclick="login()">Login</button>
+                <div class="login-notice" id="loginNotice">New users must register first.</div>
             </div>
+            <a href="#" class="switch-btn" onclick="switchModal('signup')">Switch to Register</a>
             <div class="error" id="loginError"></div>
         </div>
     </div>
@@ -661,10 +802,31 @@
                 <div class="input-group">
                     <input type="password" id="signupPassword" placeholder="Password" oninput="validateInput(this)">
                     <i class="fas fa-lock"></i>
+                    <button class="generate-password" onclick="generatePassword()">Generate</button>
                 </div>
+                <div class="password-suggestion" id="passwordSuggestion"></div>
                 <button onclick="signup()">Sign Up</button>
             </div>
+            <a href="#" class="switch-btn" onclick="switchModal('login')">Switch to Login</a>
             <div class="error" id="signupError"></div>
+        </div>
+    </div>
+    <div class="modal" id="changePasswordModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('changePassword')">×</span>
+            <h2>Change Password</h2>
+            <div class="form-card">
+                <div class="input-group">
+                    <input type="password" id="currentPassword" placeholder="Current Password" oninput="validateInput(this)">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="newPassword" placeholder="New Password" oninput="validateInput(this)">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button onclick="changePassword()">Update Password</button>
+            </div>
+            <div class="error" id="changePasswordError"></div>
         </div>
     </div>
     <div class="modal" id="profileModal">
@@ -741,8 +903,7 @@
                 request.onsuccess = function(event) {
                     currentUser = event.target.result;
                     if (currentUser) {
-                        document.getElementById('accountBtn').innerHTML = `<i class="fas fa-user"></i> ${currentUser.username}`;
-                        updateDropdown();
+                        updateLoggedInUI(currentUser.username);
                         document.body.classList.remove('inaccessible');
                         document.getElementById('hero').classList.remove('inaccessible');
                         document.getElementById('content').style.display = 'block';
@@ -752,17 +913,17 @@
                         scrollToContent();
                     } else {
                         localStorage.removeItem('currentUser');
-                        showModal('login');
+                        showModal('signup');
                         lockPage();
                     }
                 };
                 request.onerror = function(event) {
                     console.error('Error fetching user:', event.target.error);
-                    showModal('login');
+                    showModal('signup');
                     lockPage();
                 };
             } else {
-                showModal('login');
+                showModal('signup');
                 lockPage();
             }
         }
@@ -774,13 +935,20 @@
             document.getElementById('upload-section').style.display = 'none';
             document.getElementById('navLinks').style.display = 'none';
             document.getElementById('gallery').innerHTML = '';
+            document.getElementById('accountBtn').style.display = 'block';
+            document.getElementById('accountDropdown').style.display = 'none';
+            document.getElementById('loginLink').style.display = 'none';
+            document.getElementById('signupLink').style.display = 'block';
+            document.getElementById('userIndicator').style.display = 'none';
+            document.getElementById('settingsBtn').style.display = 'none';
         }
 
-        function updateDropdown() {
-            document.getElementById('loginLink').style.display = currentUser ? 'none' : 'block';
-            document.getElementById('signupLink').style.display = currentUser ? 'none' : 'block';
-            document.getElementById('profileLink').style.display = currentUser ? 'block' : 'none';
-            document.getElementById('logoutLink').style.display = currentUser ? 'block' : 'none';
+        function updateLoggedInUI(username) {
+            document.getElementById('accountBtn').style.display = 'none';
+            document.getElementById('accountDropdown').style.display = 'none';
+            document.getElementById('userIndicator').style.display = 'flex';
+            document.getElementById('loggedInUsername').textContent = username;
+            document.getElementById('settingsBtn').style.display = 'flex';
         }
 
         function validateInput(input) {
@@ -797,6 +965,8 @@
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
             const error = document.getElementById('loginError');
+            const notice = document.getElementById('loginNotice');
+            notice.classList.remove('active');
             if (!username || !password) {
                 error.textContent = 'Please fill in all fields';
                 return;
@@ -806,11 +976,15 @@
             const request = store.get(username);
             request.onsuccess = function(event) {
                 const user = event.target.result;
-                if (user && user.password === password) {
+                if (!user) {
+                    notice.classList.add('active');
+                    error.textContent = '';
+                    return;
+                }
+                if (user.password === password) {
                     currentUser = user;
                     localStorage.setItem('currentUser', username);
-                    document.getElementById('accountBtn').innerHTML = `<i class="fas fa-user"></i> ${username}`;
-                    updateDropdown();
+                    updateLoggedInUI(username);
                     closeModal('login');
                     document.body.classList.remove('inaccessible');
                     document.getElementById('hero').classList.remove('inaccessible');
@@ -820,7 +994,7 @@
                     renderGallery();
                     scrollToContent();
                 } else {
-                    error.textContent = 'Invalid credentials';
+                    error.textContent = 'Invalid password';
                 }
             };
             request.onerror = function(event) {
@@ -853,8 +1027,7 @@
                     addRequest.onsuccess = function() {
                         currentUser = { username, password };
                         localStorage.setItem('currentUser', username);
-                        document.getElementById('accountBtn').innerHTML = `<i class="fas fa-user"></i> ${username}`;
-                        updateDropdown();
+                        updateLoggedInUI(username);
                         closeModal('signup');
                         document.body.classList.remove('inaccessible');
                         document.getElementById('hero').classList.remove('inaccessible');
@@ -876,19 +1049,64 @@
             };
         }
 
+        function generatePassword() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+            let password = '';
+            for (let i = 0; i < 12; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            while (!(password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[!@#$%^&*]/.test(password))) {
+                password = '';
+                for (let i = 0; i < 12; i++) {
+                    password += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+            }
+            document.getElementById('signupPassword').value = password;
+            document.getElementById('passwordSuggestion').textContent = `Suggested: ${password}`;
+            validateInput(document.getElementById('signupPassword'));
+        }
+
+        function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const error = document.getElementById('changePasswordError');
+            if (!currentPassword || !newPassword) {
+                error.textContent = 'Please fill in all fields';
+                return;
+            }
+            if (currentPassword !== currentUser.password) {
+                error.textContent = 'Current password is incorrect';
+                return;
+            }
+            const passwordValid = newPassword.length >= 8 && /[A-Z]/.test(newPassword) && /[a-z]/.test(newPassword) && /[0-9]/.test(newPassword) && /[!@#$%^&*]/.test(newPassword);
+            if (!passwordValid) {
+                error.textContent = 'New password does not meet requirements';
+                return;
+            }
+            const transaction = db.transaction(['users'], 'readwrite');
+            const store = transaction.objectStore('users');
+            const request = store.put({ username: currentUser.username, password: newPassword });
+            request.onsuccess = function() {
+                currentUser.password = newPassword;
+                closeModal('changePassword');
+                alert('Password updated successfully!');
+            };
+            request.onerror = function(event) {
+                console.error('Change password error:', event.target.error);
+                error.textContent = 'Error updating password. Please try again.';
+            };
+        }
+
         function logout() {
             currentUser = null;
             localStorage.removeItem('currentUser');
-            document.getElementById('accountBtn').innerHTML = `<i class="fas fa-user"></i> Account`;
-            document.getElementById('accountDropdown').style.display = 'none';
-            updateDropdown();
-            showModal('login');
+            showModal('signup');
             lockPage();
         }
 
         function showProfile() {
             if (!currentUser) {
-                showModal('login');
+                showModal('signup');
                 return;
             }
             document.getElementById('profileUsername').textContent = `Username: ${currentUser.username}`;
@@ -913,7 +1131,7 @@
             if (currentUser) {
                 callback();
             } else {
-                showModal('login');
+                showModal('signup');
             }
         }
 
@@ -932,6 +1150,8 @@
             document.getElementById(`${type}Error`).textContent = '';
             const usernameInput = document.getElementById(`${type}Username`);
             const passwordInput = document.getElementById(`${type}Password`);
+            const currentPasswordInput = document.getElementById('currentPassword');
+            const newPasswordInput = document.getElementById('newPassword');
             if (usernameInput) {
                 usernameInput.value = '';
                 usernameInput.classList.remove('valid', 'invalid');
@@ -940,6 +1160,21 @@
                 passwordInput.value = '';
                 passwordInput.classList.remove('valid', 'invalid');
             }
+            if (currentPasswordInput) {
+                currentPasswordInput.value = '';
+                currentPasswordInput.classList.remove('valid', 'invalid');
+            }
+            if (newPasswordInput) {
+                newPasswordInput.value = '';
+                newPasswordInput.classList.remove('valid', 'invalid');
+            }
+            document.getElementById('passwordSuggestion').textContent = '';
+            document.getElementById('loginNotice')?.classList.remove('active');
+        }
+
+        function switchModal(type) {
+            closeModal(type === 'login' ? 'signup' : 'login');
+            showModal(type);
         }
 
         // Navbar Toggle
@@ -951,6 +1186,13 @@
         // Account Dropdown
         document.getElementById('accountBtn').addEventListener('click', function() {
             const dropdown = document.getElementById('accountDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            this.classList.toggle('active');
+        });
+
+        // Settings Dropdown
+        document.getElementById('settingsBtn').addEventListener('click', function() {
+            const dropdown = document.getElementById('settingsDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
             this.classList.toggle('active');
         });
@@ -1009,7 +1251,7 @@
         // Upload Media
         function uploadMedia() {
             if (!currentUser) {
-                showModal('login');
+                showModal('signup');
                 return;
             }
             const fileInput = document.getElementById('mediaInput');
@@ -1071,7 +1313,7 @@
         // Play Media
         function playMedia(id) {
             if (!currentUser) {
-                showModal('login');
+                showModal('signup');
                 return;
             }
             const transaction = db.transaction(['media'], 'readonly');
@@ -1121,7 +1363,7 @@
 
         function addComment(mediaId) {
             if (!currentUser) {
-                showModal('login');
+                showModal('signup');
                 return;
             }
             const text = document.getElementById('commentInput').value.trim();
@@ -1138,7 +1380,7 @@
         // Likes
         function toggleLike(mediaId, button) {
             if (!currentUser) {
-                showModal('login');
+                showModal('signup');
                 return;
             }
             const transaction = db.transaction(['likes'], 'readwrite');
@@ -1165,7 +1407,7 @@
         // Subscriptions
         function toggleSubscribe(mediaId, button) {
             if (!currentUser) {
-                showModal('login');
+                showModal('signup');
                 return;
             }
             const transaction = db.transaction(['subscriptions'], 'readwrite');
@@ -1191,7 +1433,7 @@
 
         function showSubscriptions() {
             if (!currentUser) {
-                showModal('login');
+                showModal('signup');
                 return;
             }
             const gallery = document.getElementById('gallery');
