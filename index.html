@@ -752,7 +752,7 @@
             <div class="settings-dropdown" id="settingsDropdown">
                 <a href="#" onclick="showModal('changePassword')" aria-label="Change Password">Change Password</a>
                 <a href="#" onclick="showModal('theme')" aria-label="Change Theme">Theme</a>
-                <a href="#" onclick="showModal('accountInfo')" aria-label="Account Info">Account Info</a>
+                <a href="#" onclick="showAccountInfo()" aria-label="Account Info">Account Info</a>
                 <a href="#" onclick="logout()" aria-label="Logout">Logout</a>
             </div>
         </div>
@@ -902,8 +902,9 @@
             const store = transaction.objectStore('news');
             const request = store.getAll();
             request.onsuccess = function(event) {
-                if (event.target.result.length === 0) {
-                    const newsData = {
+                const existingNews = event.target.result;
+                const newsArticles = [
+                    {
                         title: '🎤 BREAKING MUSIC NEWS: A SONG THAT WILL STIR YOUR SOUL!',
                         content: `🔥 EXCLUSIVE from Spudy TV 🔥
 
@@ -938,11 +939,52 @@ It’s the anthem we didn’t know we needed… until now.`,
                         category: 'entertainment',
                         author: 'Spudy TV',
                         date: new Date().toISOString()
-                    };
-                    store.add(newsData).onsuccess = function() {
-                        renderGallery();
-                    };
-                }
+                    },
+                    {
+                        title: '🚨 BREAKING NEWS! 🚨 Spudy TV is LIVE with Mai Vangu Drop!',
+                        content: `🚨 BREAKING NEWS! 🚨
+
+📡 Spudy TV is now LIVE!
+Just search “Spudy TV” on the web — we’re officially streaming! 🔥
+
+Your go-to source for music, culture, and exclusive content is here. Tune in now to catch the latest updates, live performances, and behind-the-scenes action. Search "Spudy TV" on your favorite browser and join the movement!
+
+But that’s not all...
+
+🎤 BIGGEST MUSIC DROP OF THE SEASON COMING THIS MONDAY!
+🎶 Spudy — “Mai Vangu” (Official Song + Music Video)
+
+Get ready for a cultural phenomenon! Spudy’s “Mai Vangu” is dropping this Monday, and it’s more than just a song — it’s a heartfelt tribute to the strength and love of mothers everywhere. Expect soul-stirring vocals, powerful lyrics, and a music video that will leave you speechless.
+
+🌟 Why you can’t miss this:
+- A deeply personal anthem celebrating love and sacrifice.
+- Stunning visuals in the official music video, dropping the same day.
+- A melody that resonates with the warmth of home and the pride of our roots.
+
+🚨 Mark your calendars, set your alarms, and tell your friends — this Monday is about to make history!
+
+👉 Stream Spudy TV now for exclusive sneak peeks, countdowns, and more.
+🎧 “Mai Vangu” — the anthem of gratitude is coming!`,
+                        category: 'entertainment',
+                        author: 'Spudy TV',
+                        date: new Date().toISOString()
+                    }
+                ];
+
+                newsArticles.forEach(news => {
+                    if (!existingNews.some(existing => existing.title === news.title)) {
+                        store.add(news).onsuccess = function() {
+                            console.log(`Added news: ${news.title}`);
+                        };
+                    }
+                });
+
+                transaction.oncomplete = function() {
+                    renderGallery();
+                };
+            };
+            request.onerror = function(event) {
+                console.error('Error fetching news for preload:', event.target.error);
             };
         }
 
