@@ -8,6 +8,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
+        :root {
+            --bg-color: #071429;
+            --text-color: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --modal-bg: rgba(255, 255, 255, 0.2);
+            --input-bg: rgba(255, 255, 255, 0.25);
+            --accent-color: #00c6ff;
+            --navbar-bg: rgba(0, 51, 102, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f5f5f5;
+            --text-color: #071429;
+            --card-bg: rgba(0, 0, 0, 0.1);
+            --modal-bg: rgba(255, 255, 255, 0.9);
+            --input-bg: rgba(0, 0, 0, 0.1);
+            --accent-color: #007bff;
+            --navbar-bg: rgba(255, 255, 255, 0.9);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -16,8 +36,8 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            color: #ffffff;
-            background: #071429;
+            color: var(--text-color);
+            background: var(--bg-color);
             overflow-x: hidden;
         }
 
@@ -27,9 +47,9 @@
         }
 
         @keyframes glow {
-            0% { box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(0, 123, 255, 0.6); }
-            100% { box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); }
+            0% { box-shadow: 0 0 5px var(--accent-color); }
+            50% { box-shadow: 0 0 20px var(--accent-color); }
+            100% { box-shadow: 0 0 5px var(--accent-color); }
         }
 
         @keyframes slideIn {
@@ -50,7 +70,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 51, 102, 0.4);
+            background: var(--navbar-bg);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.15);
             z-index: 1000;
@@ -63,7 +83,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: #ffffff;
+            color: var(--text-color);
         }
 
         .navbar .premium-badge {
@@ -84,14 +104,14 @@
         .navbar .menu-toggle {
             background: none;
             border: none;
-            color: #ffffff;
+            color: var(--text-color);
             font-size: 1.5rem;
             cursor: pointer;
             display: none;
         }
 
-        .navbar .menu-toggle:hover {
-            color: #00c6ff;
+        .navbar .menu-toggle:hover, .navbar .menu-toggle:focus {
+            color: var(--accent-color);
         }
 
         .navbar .nav-links {
@@ -109,7 +129,7 @@
         }
 
         .navbar .nav-links a {
-            color: #ffffff;
+            color: var(--text-color);
             text-decoration: none;
             font-size: 1rem;
             font-weight: 500;
@@ -118,9 +138,9 @@
             transition: background 0.4s, color 0.4s, transform 0.4s;
         }
 
-        .navbar .nav-links a:hover {
+        .navbar .nav-links a:hover, .navbar .nav-links a:focus {
             background: rgba(0, 123, 255, 0.4);
-            color: #00c6ff;
+            color: var(--accent-color);
             transform: scale(1.05);
         }
 
@@ -138,10 +158,10 @@
             transition: transform 0.4s, box-shadow 0.4s;
         }
 
-        .navbar .account-btn:hover {
+        .navbar .account-btn:hover, .navbar .account-btn:focus {
             transform: translateY(-4px);
             box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
-            background: linear-gradient(45deg, #007bff, #00c6ff);
+            background: linear-gradient(45deg, #007bff, var(--accent-color));
         }
 
         .navbar .account-dropdown {
@@ -149,7 +169,7 @@
             position: absolute;
             top: 100%;
             right: 0;
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--modal-bg);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(0, 123, 255, 0.3);
             border-radius: 15px;
@@ -167,15 +187,15 @@
         .navbar .account-dropdown a {
             display: block;
             padding: 12px 25px;
-            color: #ffffff;
+            color: var(--text-color);
             text-decoration: none;
             font-size: 0.9rem;
             transition: background 0.4s, transform 0.4s;
         }
 
-        .navbar .account-dropdown a:hover {
+        .navbar .account-dropdown a:hover, .navbar .account-dropdown a:focus {
             background: rgba(0, 123, 255, 0.4);
-            color: #00c6ff;
+            color: var(--accent-color);
             transform: translateX(6px);
         }
 
@@ -192,7 +212,7 @@
             transition: transform 0.4s, box-shadow 0.4s;
         }
 
-        .navbar .user-indicator:hover {
+        .navbar .user-indicator:hover, .navbar .user-indicator:focus {
             transform: translateY(-4px);
             box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
         }
@@ -211,10 +231,10 @@
             transition: transform 0.4s, box-shadow 0.4s;
         }
 
-        .navbar .settings-btn:hover {
+        .navbar .settings-btn:hover, .navbar .settings-btn:focus {
             transform: translateY(-4px);
             box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
-            background: linear-gradient(45deg, #007bff, #00c6ff);
+            background: linear-gradient(45deg, #007bff, var(--accent-color));
         }
 
         .navbar .settings-dropdown {
@@ -222,7 +242,7 @@
             position: absolute;
             top: 100%;
             right: 0;
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--modal-bg);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(0, 123, 255, 0.3);
             border-radius: 15px;
@@ -240,15 +260,15 @@
         .navbar .settings-dropdown a {
             display: block;
             padding: 12px 25px;
-            color: #ffffff;
+            color: var(--text-color);
             text-decoration: none;
             font-size: 0.9rem;
             transition: background 0.4s, transform 0.4s;
         }
 
-        .navbar .settings-dropdown a:hover {
+        .navbar .settings-dropdown a:hover, .navbar .settings-dropdown a:focus {
             background: rgba(0, 123, 255, 0.4);
-            color: #00c6ff;
+            color: var(--accent-color);
             transform: translateX(6px);
         }
 
@@ -268,7 +288,7 @@
         }
 
         .modal-content {
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--modal-bg);
             backdrop-filter: blur(20px);
             padding: 40px;
             border-radius: 25px;
@@ -284,11 +304,11 @@
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
-            color: #ffffff;
+            color: var(--text-color);
         }
 
         .modal-content .form-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
             padding: 25px;
             border-radius: 20px;
             border: 1px solid rgba(0, 123, 255, 0.25);
@@ -302,14 +322,15 @@
             border: none;
             border-radius: 50px;
             font-size: 1rem;
-            background: rgba(255, 255, 255, 0.25);
-            color: #ffffff;
+            background: var(--input-bg);
+            color: var(--text-color);
             transition: box-shadow 0.4s, border 0.4s;
         }
 
         .modal-content input:focus {
             box-shadow: 0 0 12px rgba(0, 123, 255, 0.6);
-            border: 1px solid #00c6ff;
+            border: 1px solid var(--accent-color);
+            outline: none;
         }
 
         .modal-content input.valid {
@@ -332,13 +353,13 @@
             right: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: #00c6ff;
+            color: var(--accent-color);
             font-size: 1rem;
         }
 
         .modal-content button {
             padding: 14px 35px;
-            background: linear-gradient(45deg, #007bff, #00c6ff);
+            background: linear-gradient(45deg, #007bff, var(--accent-color));
             color: #ffffff;
             border: none;
             border-radius: 50px;
@@ -347,7 +368,7 @@
             transition: transform 0.4s, box-shadow 0.4s;
         }
 
-        .modal-content button:hover {
+        .modal-content button:hover, .modal-content button:focus {
             transform: translateY(-4px);
             box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
             animation: glow 1.5s infinite;
@@ -359,11 +380,11 @@
             right: 25px;
             font-size: 1.8rem;
             cursor: pointer;
-            color: #ffffff;
+            color: var(--text-color);
         }
 
-        .modal-content .close:hover {
-            color: #00c6ff;
+        .modal-content .close:hover, .modal-content .close:focus {
+            color: var(--accent-color);
         }
 
         .modal-content .error {
@@ -376,7 +397,7 @@
             display: inline-block;
             margin-top: 12px;
             padding: 10px 25px;
-            background: linear-gradient(45deg, #007bff, #00c6ff);
+            background: linear-gradient(45deg, #007bff, var(--accent-color));
             color: #ffffff;
             text-decoration: none;
             border-radius: 50px;
@@ -384,14 +405,14 @@
             transition: transform 0.4s, box-shadow 0.4s;
         }
 
-        .modal-content .switch-btn:hover {
+        .modal-content .switch-btn:hover, .modal-content .switch-btn:focus {
             transform: translateY(-4px);
             box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
         }
 
         .modal-content .login-notice {
             display: none;
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--card-bg);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(0, 123, 255, 0.3);
             border-radius: 12px;
@@ -408,7 +429,7 @@
 
         .modal-content .password-suggestion {
             font-size: 0.9rem;
-            color: #00c6ff;
+            color: var(--accent-color);
             margin-top: 8px;
             word-break: break-all;
         }
@@ -425,7 +446,7 @@
             transition: transform 0.4s, box-shadow 0.4s;
         }
 
-        .modal-content .generate-password:hover {
+        .modal-content .generate-password:hover, .modal-content .generate-password:focus {
             transform: translateY(-4px);
             box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
         }
@@ -469,21 +490,21 @@
             font-family: 'Playfair Display', serif;
             font-size: 4.5rem;
             margin-bottom: 1.5rem;
-            color: #ffffff;
+            color: var(--text-color);
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         .hero-content .typing {
             font-size: 2rem;
             margin-bottom: 2.5rem;
-            color: #00c6ff;
+            color: var(--accent-color);
             height: 2.5rem;
             font-weight: 500;
         }
 
         .cta-button {
             padding: 1.3rem 4rem;
-            background: linear-gradient(45deg, #007bff, #00c6ff);
+            background: linear-gradient(45deg, #007bff, var(--accent-color));
             color: #ffffff;
             text-decoration: none;
             border-radius: 50px;
@@ -493,7 +514,7 @@
             z-index: 5;
         }
 
-        .cta-button:hover {
+        .cta-button:hover, .cta-button:focus {
             transform: translateY(-6px);
             box-shadow: 0 10px 25px rgba(0, 123, 255, 0.7);
             animation: glow 1.5s infinite;
@@ -515,14 +536,14 @@
         }
 
         .news-card {
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 20px;
             animation: fadeInUp 1.2s ease;
             transition: transform 0.4s, box-shadow 0.4s;
         }
 
-        .news-card:hover {
+        .news-card:hover, .news-card:focus {
             transform: translateY(-6px);
             box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
         }
@@ -531,12 +552,12 @@
             font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 15px;
-            color: #ffffff;
+            color: var(--text-color);
         }
 
         .read-now-btn {
             padding: 12px 25px;
-            background: linear-gradient(45deg, #007bff, #00c6ff);
+            background: linear-gradient(45deg, #007bff, var(--accent-color));
             color: #ffffff;
             border: none;
             border-radius: 50px;
@@ -547,7 +568,7 @@
             width: 100%;
         }
 
-        .read-now-btn:hover {
+        .read-now-btn:hover, .read-now-btn:focus {
             transform: translateY(-4px);
             box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
             animation: glow 1.5s infinite;
@@ -570,7 +591,7 @@
         .news-viewer {
             max-width: 900px;
             width: 95%;
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--modal-bg);
             padding: 30px;
             border-radius: 12px;
             animation: fadeInUp 0.6s ease;
@@ -585,23 +606,23 @@
             right: 25px;
             font-size: 1.8rem;
             cursor: pointer;
-            color: #ffffff;
+            color: var(--text-color);
         }
 
-        .news-viewer .close-news:hover {
-            color: #00c6ff;
+        .news-viewer .close-news:hover, .news-viewer .close-news:focus {
+            color: var(--accent-color);
         }
 
         .news-viewer .news-title {
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
             margin-bottom: 1.2rem;
-            color: #ffffff;
+            color: var(--text-color);
         }
 
         .news-viewer .news-meta {
             font-size: 1rem;
-            color: #00c6ff;
+            color: var(--accent-color);
             margin-bottom: 1.2rem;
             font-weight: 500;
         }
@@ -610,7 +631,7 @@
             font-size: 1.1rem;
             line-height: 1.8;
             margin-bottom: 1.5rem;
-            color: #e0e0e0;
+            color: var(--text-color);
         }
 
         .news-viewer .comments-section {
@@ -624,14 +645,14 @@
             padding: 12px;
             border: none;
             border-radius: 50px;
-            background: rgba(255, 255, 255, 0.25);
-            color: #ffffff;
+            background: var(--input-bg);
+            color: var(--text-color);
             font-size: 1rem;
         }
 
         .news-viewer .comments-section button {
             padding: 12px 25px;
-            background: linear-gradient(45deg, #007bff, #00c6ff);
+            background: linear-gradient(45deg, #007bff, var(--accent-color));
             color: #ffffff;
             border: none;
             border-radius: 50px;
@@ -641,14 +662,14 @@
             transition: transform 0.4s, box-shadow 0.4s;
         }
 
-        .news-viewer .comments-section button:hover {
+        .news-viewer .comments-section button:hover, .news-viewer .comments-section button:focus {
             transform: translateY(-4px);
             box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
         }
 
         .news-viewer .comments-section .comment {
             padding: 12px;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
             border-radius: 10px;
             margin: 12px 0;
             font-size: 0.9rem;
@@ -673,7 +694,7 @@
                 top: 100%;
                 left: 0;
                 width: 100%;
-                background: rgba(0, 51, 102, 0.4);
+                background: var(--navbar-bg);
                 backdrop-filter: blur(15px);
                 flex-direction: column;
                 padding: 25px;
@@ -703,36 +724,36 @@
     </style>
 </head>
 <body>
-    <div class="navbar">
+    <div class="navbar" role="navigation" aria-label="Main navigation">
         <div class="logo">Spudy News <span class="premium-badge">Premium</span></div>
         <div class="nav-card">
-            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
             <div class="nav-links" id="navLinks">
-                <a href="#" onclick="checkAuth(() => filterCategory('all'))">Home</a>
-                <a href="#" onclick="checkAuth(showSubscriptions)">Subscriptions</a>
+                <a href="#" onclick="checkAuth(() => filterCategory('all'))" aria-label="Home">Home</a>
+                <a href="#" onclick="checkAuth(showSubscriptions)" aria-label="Subscriptions">Subscriptions</a>
             </div>
-            <input type="text" placeholder="Search news..." id="searchBar" style="border: none; border-radius: 50px; padding: 8px; background: rgba(255, 255, 255, 0.25); color: #ffffff;">
-            <select id="categoryFilter" style="border: none; border-radius: 50px; padding: 8px; background: rgba(255, 255, 255, 0.25); color: #ffffff;">
+            <input type="text" placeholder="Search news..." id="searchBar" aria-label="Search news" style="border: none; border-radius: 50px; padding: 8px; background: var(--input-bg); color: var(--text-color);">
+            <select id="categoryFilter" aria-label="Filter by category" style="border: none; border-radius: 50px; padding: 8px; background: var(--input-bg); color: var(--text-color);">
                 <option value="all">All</option>
                 <option value="politics">Politics</option>
                 <option value="technology">Technology</option>
                 <option value="sports">Sports</option>
                 <option value="entertainment">Entertainment</option>
             </select>
-            <button class="account-btn" id="accountBtn"><i class="fas fa-user"></i> Account</button>
+            <button class="account-btn" id="accountBtn" aria-label="Account options"><i class="fas fa-user"></i> Account</button>
             <div class="account-dropdown" id="accountDropdown">
-                <a href="#" id="loginLink" onclick="showModal('login')">Login</a>
-                <a href="#" id="signupLink" onclick="showModal('signup')">Sign Up</a>
+                <a href="#" id="loginLink" onclick="showModal('login')" aria-label="Login">Login</a>
+                <a href="#" id="signupLink" onclick="showModal('signup')" aria-label="Sign Up">Sign Up</a>
             </div>
-            <div class="user-indicator" id="userIndicator" style="display: none;">
+            <div class="user-indicator" id="userIndicator" style="display: none;" aria-label="Logged in user">
                 <i class="fas fa-user"></i> Logged in as <span id="loggedInUsername"></span>
             </div>
-            <button class="settings-btn" id="settingsBtn" style="display: none;"><i class="fas fa-cog"></i> Settings</button>
+            <button class="settings-btn" id="settingsBtn" style="display: none;" aria-label="Settings"><i class="fas fa-cog"></i> Settings</button>
             <div class="settings-dropdown" id="settingsDropdown">
-                <a href="#" onclick="showModal('changePassword')">Change Password</a>
-                <a href="#" onclick="alert('Theme switching coming soon!')">Theme</a>
-                <a href="#" onclick="alert('Account info coming soon!')">Account Info</a>
-                <a href="#" onclick="logout()">Logout</a>
+                <a href="#" onclick="showModal('changePassword')" aria-label="Change Password">Change Password</a>
+                <a href="#" onclick="showModal('theme')" aria-label="Change Theme">Theme</a>
+                <a href="#" onclick="showModal('accountInfo')" aria-label="Account Info">Account Info</a>
+                <a href="#" onclick="logout()" aria-label="Logout">Logout</a>
             </div>
         </div>
     </div>
@@ -742,7 +763,7 @@
         <div class="hero-content">
             <h1>Welcome to Spudy News Premium</h1>
             <div class="typing">Your Exclusive News Source</div>
-            <a href="#content" class="cta-button" onclick="checkAuth(() => scrollToContent())">Discover Now</a>
+            <a href="#content" class="cta-button" onclick="checkAuth(() => scrollToContent())" aria-label="Discover news">Discover Now</a>
         </div>
     </div>
 
@@ -750,76 +771,100 @@
         <div class="gallery" id="gallery"></div>
     </div>
 
-    <div class="news-section" id="newsSection">
-        <span class="close-news" onclick="closeNews()">×</span>
+    <div class="news-section" id="newsSection" role="dialog" aria-modal="true" aria-label="News article viewer">
+        <span class="close-news" onclick="closeNews()" tabindex="0" aria-label="Close news viewer">×</span>
         <div class="news-viewer" id="newsViewer">
             <div class="comments-section" id="commentsSection"></div>
         </div>
     </div>
 
-    <div class="modal" id="loginModal">
+    <div class="modal" id="loginModal" role="dialog" aria-modal="true" aria-label="Login modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('login')">×</span>
+            <span class="close" onclick="closeModal('login')" tabindex="0" aria-label="Close login modal">×</span>
             <h2>Login to Spudy News Premium</h2>
             <div class="form-card">
                 <div class="input-group">
-                    <input type="text" id="loginUsername" placeholder="Username" oninput="validateInput(this)">
+                    <input type="text" id="loginUsername" placeholder="Username" oninput="validateInput(this)" aria-label="Username">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="loginPassword" placeholder="Password" oninput="validateInput(this)">
+                    <input type="password" id="loginPassword" placeholder="Password" oninput="validateInput(this)" aria-label="Password">
                     <i class="fas fa-lock"></i>
                 </div>
-                <button onclick="login()">Login</button>
+                <button onclick="login()" aria-label="Login">Login</button>
                 <div class="login-notice" id="loginNotice">New users must register first.</div>
             </div>
-            <a href="#" class="switch-btn" onclick="switchModal('signup')">Switch to Register</a>
+            <a href="#" class="switch-btn" onclick="switchModal('signup')" aria-label="Switch to register">Switch to Register</a>
             <div class="error" id="loginError"></div>
         </div>
     </div>
-    <div class="modal" id="signupModal">
+    <div class="modal" id="signupModal" role="dialog" aria-modal="true" aria-label="Sign up modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('signup')">×</span>
+            <span class="close" onclick="closeModal('signup')" tabindex="0" aria-label="Close sign up modal">×</span>
             <h2>Join Spudy News Premium</h2>
             <div class="form-card">
                 <div class="input-group">
-                    <input type="text" id="signupUsername" placeholder="Username" oninput="validateInput(this)">
+                    <input type="text" id="signupUsername" placeholder="Username" oninput="validateInput(this)" aria-label="Username">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="signupPassword" placeholder="Password" oninput="validateInput(this)">
+                    <input type="email" id="signupEmail" placeholder="Email" oninput="validateInput(this)" aria-label="Email">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signupPassword" placeholder="Password" oninput="validateInput(this)" aria-label="Password">
                     <i class="fas fa-lock"></i>
-                    <button class="generate-password" onclick="generatePassword()">Generate</button>
+                    <button class="generate-password" onclick="generatePassword()" aria-label="Generate password">Generate</button>
                 </div>
                 <div class="password-suggestion" id="passwordSuggestion"></div>
-                <button onclick="signup()">Sign Up</button>
+                <button onclick="signup()" aria-label="Sign up">Sign Up</button>
             </div>
-            <a href="#" class="switch-btn" onclick="switchModal('login')">Switch to Login</a>
+            <a href="#" class="switch-btn" onclick="switchModal('login')" aria-label="Switch to login">Switch to Login</a>
             <div class="error" id="signupError"></div>
         </div>
     </div>
-    <div class="modal" id="changePasswordModal">
+    <div class="modal" id="changePasswordModal" role="dialog" aria-modal="true" aria-label="Change password modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('changePassword')">×</span>
+            <span class="close" onclick="closeModal('changePassword')" tabindex="0" aria-label="Close change password modal">×</span>
             <h2>Change Password</h2>
             <div class="form-card">
                 <div class="input-group">
-                    <input type="password" id="currentPassword" placeholder="Current Password" oninput="validateInput(this)">
+                    <input type="password" id="currentPassword" placeholder="Current Password" oninput="validateInput(this)" aria-label="Current password">
                     <i class="fas fa-lock"></i>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="newPassword" placeholder="New Password" oninput="validateInput(this)">
+                    <input type="password" id="newPassword" placeholder="New Password" oninput="validateInput(this)" aria-label="New password">
                     <i class="fas fa-lock"></i>
                 </div>
-                <button onclick="changePassword()">Update Password</button>
+                <button onclick="changePassword()" aria-label="Update password">Update Password</button>
             </div>
             <div class="error" id="changePasswordError"></div>
+        </div>
+    </div>
+    <div class="modal" id="themeModal" role="dialog" aria-modal="true" aria-label="Theme selection modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('theme')" tabindex="0" aria-label="Close theme modal">×</span>
+            <h2>Choose Theme</h2>
+            <div class="form-card">
+                <button onclick="setTheme('dark')" aria-label="Select dark theme">Dark Theme</button>
+                <button onclick="setTheme('light')" aria-label="Select light theme">Light Theme</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="accountInfoModal" role="dialog" aria-modal="true" aria-label="Account information modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('accountInfo')" tabindex="0" aria-label="Close account info modal">×</span>
+            <h2>Account Information</h2>
+            <div class="form-card">
+                <p><strong>Username:</strong> <span id="accountUsername"></span></p>
+                <p><strong>Email:</strong> <span id="accountEmail"></span></p>
+            </div>
         </div>
     </div>
 
     <script>
         let db;
-        const request = indexedDB.open('SpudyNewsDB', 1);
+        const request = indexedDB.open('SpudyNewsDB', 2);
 
         request.onupgradeneeded = function(event) {
             db = event.target.result;
@@ -844,6 +889,7 @@
             db = event.target.result;
             preloadNews();
             checkCurrentUser();
+            loadTheme();
         };
 
         request.onerror = function(event) {
@@ -893,7 +939,9 @@ It’s the anthem we didn’t know we needed… until now.`,
                         author: 'Spudy TV',
                         date: new Date().toISOString()
                     };
-                    store.add(newsData);
+                    store.add(newsData).onsuccess = function() {
+                        renderGallery();
+                    };
                 }
             };
         }
@@ -916,6 +964,17 @@ It’s the anthem we didn’t know we needed… until now.`,
         });
 
         let currentUser = null;
+
+        function loadTheme() {
+            const theme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            closeModal('theme');
+        }
 
         function checkCurrentUser() {
             const username = localStorage.getItem('currentUser');
@@ -973,7 +1032,16 @@ It’s the anthem we didn’t know we needed… until now.`,
         }
 
         function validateInput(input) {
-            if (input.value.trim()) {
+            if (input.type === 'email') {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailRegex.test(input.value.trim())) {
+                    input.classList.add('valid');
+                    input.classList.remove('invalid');
+                } else {
+                    input.classList.add('invalid');
+                    input.classList.remove('valid');
+                }
+            } else if (input.value.trim()) {
                 input.classList.add('valid');
                 input.classList.remove('invalid');
             } else {
@@ -1025,10 +1093,16 @@ It’s the anthem we didn’t know we needed… until now.`,
 
         function signup() {
             const username = document.getElementById('signupUsername').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
             const password = document.getElementById('signupPassword').value;
             const error = document.getElementById('signupError');
-            if (!username || !password) {
+            if (!username || !email || !password) {
                 error.textContent = 'Please fill in all fields';
+                return;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                error.textContent = 'Please enter a valid email address';
                 return;
             }
             const passwordValid = password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[!@#$%^&*]/.test(password);
@@ -1043,9 +1117,9 @@ It’s the anthem we didn’t know we needed… until now.`,
                 if (event.target.result) {
                     error.textContent = 'Username already exists';
                 } else {
-                    const addRequest = store.add({ username, password });
+                    const addRequest = store.add({ username, email, password });
                     addRequest.onsuccess = function() {
-                        currentUser = { username, password };
+                        currentUser = { username, email, password };
                         localStorage.setItem('currentUser', username);
                         updateLoggedInUI(username);
                         closeModal('signup');
@@ -1104,7 +1178,7 @@ It’s the anthem we didn’t know we needed… until now.`,
             }
             const transaction = db.transaction(['users'], 'readwrite');
             const store = transaction.objectStore('users');
-            const request = store.put({ username: currentUser.username, password: newPassword });
+            const request = store.put({ username: currentUser.username, email: currentUser.email, password: newPassword });
             request.onsuccess = function() {
                 currentUser.password = newPassword;
                 closeModal('changePassword');
@@ -1114,6 +1188,16 @@ It’s the anthem we didn’t know we needed… until now.`,
                 console.error('Change password error:', event.target.error);
                 error.textContent = 'Error updating password. Please try again.';
             };
+        }
+
+        function showAccountInfo() {
+            if (!currentUser) {
+                showModal('signup');
+                return;
+            }
+            document.getElementById('accountUsername').textContent = currentUser.username;
+            document.getElementById('accountEmail').textContent = currentUser.email || 'Not provided';
+            showModal('accountInfo');
         }
 
         function logout() {
@@ -1136,33 +1220,20 @@ It’s the anthem we didn’t know we needed… until now.`,
         }
 
         function showModal(type) {
-            document.getElementById(`${type}Modal`).style.display = 'flex';
-            document.getElementById(`${type}Username`)?.focus();
+            const modal = document.getElementById(`${type}Modal`);
+            modal.style.display = 'flex';
+            modal.querySelector('input')?.focus();
         }
 
         function closeModal(type) {
-            document.getElementById(`${type}Modal`).style.display = 'none';
+            const modal = document.getElementById(`${type}Modal`);
+            modal.style.display = 'none';
             document.getElementById(`${type}Error`).textContent = '';
-            const usernameInput = document.getElementById(`${type}Username`);
-            const passwordInput = document.getElementById(`${type}Password`);
-            const currentPasswordInput = document.getElementById('currentPassword');
-            const newPasswordInput = document.getElementById('newPassword');
-            if (usernameInput) {
-                usernameInput.value = '';
-                usernameInput.classList.remove('valid', 'invalid');
-            }
-            if (passwordInput) {
-                passwordInput.value = '';
-                passwordInput.classList.remove('valid', 'invalid');
-            }
-            if (currentPasswordInput) {
-                currentPasswordInput.value = '';
-                currentPasswordInput.classList.remove('valid', 'invalid');
-            }
-            if (newPasswordInput) {
-                newPasswordInput.value = '';
-                newPasswordInput.classList.remove('valid', 'invalid');
-            }
+            const inputs = modal.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.value = '';
+                input.classList.remove('valid', 'invalid');
+            });
             document.getElementById('passwordSuggestion').textContent = '';
             document.getElementById('loginNotice')?.classList.remove('active');
         }
@@ -1177,10 +1248,24 @@ It’s the anthem we didn’t know we needed… until now.`,
             navLinks.classList.toggle('active');
         });
 
+        document.getElementById('menuToggle').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                this.click();
+            }
+        });
+
         document.getElementById('accountBtn').addEventListener('click', function() {
             const dropdown = document.getElementById('accountDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
             this.classList.toggle('active');
+        });
+
+        document.getElementById('accountBtn').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                this.click();
+            }
         });
 
         document.getElementById('settingsBtn').addEventListener('click', function() {
@@ -1189,8 +1274,18 @@ It’s the anthem we didn’t know we needed… until now.`,
             this.classList.toggle('active');
         });
 
+        document.getElementById('settingsBtn').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                this.click();
+            }
+        });
+
         function renderGallery(filter = 'all', query = '') {
-            if (!currentUser) return;
+            if (!currentUser) {
+                showModal('signup');
+                return;
+            }
             const gallery = document.getElementById('gallery');
             gallery.innerHTML = '';
             const transaction = db.transaction(['news'], 'readonly');
@@ -1207,10 +1302,17 @@ It’s the anthem we didn’t know we needed… until now.`,
                 newsList.forEach(news => {
                     const card = document.createElement('div');
                     card.className = 'news-card';
+                    card.tabIndex = 0;
                     card.innerHTML = `
-                        <div class="title">${news.title}</div>
-                        <button class="read-now-btn" onclick="readNews(${news.id}, this)">Read Now</button>
+                        <div class="title" aria-label="News headline: ${news.title}">${news.title}</div>
+                        <button class="read-now-btn" onclick="readNews(${news.id}, this)" aria-label="Read news: ${news.title}">Read Now</button>
                     `;
+                    card.addEventListener('keydown', function(event) {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            readNews(news.id, card.querySelector('.read-now-btn'));
+                        }
+                    });
                     gallery.appendChild(card);
                 });
             };
@@ -1231,6 +1333,7 @@ It’s the anthem we didn’t know we needed… until now.`,
             request.onsuccess = function(event) {
                 const news = event.target.result;
                 if (!news) {
+                    console.error('News not found for ID:', id);
                     alert('News article not found. Please try again.');
                     return;
                 }
@@ -1243,6 +1346,7 @@ It’s the anthem we didn’t know we needed… until now.`,
                 `;
                 renderComments(id);
                 newsSection.style.display = 'flex';
+                newsViewer.focus();
             };
             request.onerror = function(event) {
                 console.error('Error fetching news article:', event.target.error);
@@ -1257,11 +1361,18 @@ It’s the anthem we didn’t know we needed… until now.`,
             newsSection.style.display = 'none';
         }
 
+        document.querySelector('.close-news').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                closeNews();
+            }
+        });
+
         function renderComments(newsId) {
             const commentsSection = document.getElementById('commentsSection');
             commentsSection.innerHTML = `
-                <input type="text" id="commentInput" placeholder="Add a comment...">
-                <button onclick="addComment(${newsId})">Post</button>
+                <input type="text" id="commentInput" placeholder="Add a comment..." aria-label="Add a comment">
+                <button onclick="addComment(${newsId})" aria-label="Post comment">Post</button>
             `;
             const transaction = db.transaction(['comments'], 'readonly');
             const store = transaction.objectStore('comments');
@@ -1365,10 +1476,17 @@ It’s the anthem we didn’t know we needed… until now.`,
                     newsList.forEach(news => {
                         const card = document.createElement('div');
                         card.className = 'news-card';
+                        card.tabIndex = 0;
                         card.innerHTML = `
-                            <div class="title">${news.title}</div>
-                            <button class="read-now-btn" onclick="readNews(${news.id}, this)">Read Now</button>
+                            <div class="title" aria-label="News headline: ${news.title}">${news.title}</div>
+                            <button class="read-now-btn" onclick="readNews(${news.id}, this)" aria-label="Read news: ${news.title}">Read Now</button>
                         `;
+                        card.addEventListener('keydown', function(event) {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                                event.preventDefault();
+                                readNews(news.id, card.querySelector('.read-now-btn'));
+                            }
+                        });
                         gallery.appendChild(card);
                     });
                 };
@@ -1387,6 +1505,20 @@ It’s the anthem we didn’t know we needed… until now.`,
             document.getElementById('categoryFilter').value = category;
             renderGallery(category, document.getElementById('searchBar').value);
         }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (modal.style.display === 'flex') {
+                        closeModal(modal.id.replace('Modal', ''));
+                    }
+                });
+                if (document.getElementById('newsSection').style.display === 'flex') {
+                    closeNews();
+                }
+            }
+        });
 
         renderGallery();
     </script>
