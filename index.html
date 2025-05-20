@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpudyTube - Spudy Intelligence Technology</title>
+    <title>Spudy News - Daily Updates</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
@@ -21,7 +21,6 @@
             overflow-x: hidden;
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -48,7 +47,6 @@
             to { opacity: 0; }
         }
 
-        /* Navbar */
         .navbar {
             position: fixed;
             top: 0;
@@ -248,7 +246,6 @@
             transform: translateX(5px);
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -291,11 +288,6 @@
             animation: fadeInUp 0.7s ease;
         }
 
-        .modal-content .input-group {
-            position: relative;
-            margin: 10px 0;
-        }
-
         .modal-content input {
             width: 100%;
             padding: 12px 40px 12px 15px;
@@ -320,6 +312,11 @@
         .modal-content input.invalid {
             border: 1px solid #ff4d4d;
             box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+        }
+
+        .modal-content .input-group {
+            position: relative;
+            margin: 10px 0;
         }
 
         .modal-content .input-group i {
@@ -425,7 +422,6 @@
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
         }
 
-        /* Hero */
         .hero {
             position: relative;
             height: 100vh;
@@ -491,7 +487,6 @@
             animation: glow 1.5s infinite;
         }
 
-        /* Main Content */
         .container {
             padding: 20px;
             max-width: 1200px;
@@ -501,80 +496,54 @@
             z-index: 1;
         }
 
-        .upload-section {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            margin-bottom: 20px;
-            animation: fadeInUp 1s ease;
-        }
-
-        .upload-section input, .upload-section select {
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            width: 100%;
-        }
-
-        .upload-section button {
-            padding: 10px 20px;
-            background: linear-gradient(45deg, #007bff, #00c6ff);
-            color: #ffffff;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .upload-section button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
-        }
-
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
         }
 
-        .media-card {
+        .news-card {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             overflow: hidden;
             animation: fadeInUp 1s ease;
             cursor: pointer;
+            padding: 15px;
         }
 
-        .media-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
+        .news-card .title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
 
-        .media-card .info {
-            padding: 10px;
+        .news-card .content-preview {
+            font-size: 0.9rem;
+            color: #cccccc;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .media-card .title {
-            font-size: 1rem;
-            margin-bottom: 5px;
-        }
-
-        .media-card .channel {
+        .news-card .author {
             font-size: 0.8rem;
             color: #00c6ff;
         }
 
-        .media-card .actions {
-            display: flex;
-            gap: 10px;
-            padding: 10px;
+        .news-card .date {
+            font-size: 0.8rem;
+            color: #999999;
         }
 
-        .media-card .actions button {
+        .news-card .actions {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        .news-card .actions button {
             background: none;
             border: none;
             color: #ffffff;
@@ -582,12 +551,28 @@
             font-size: 0.9rem;
         }
 
-        .media-card .actions button.liked, .media-card .actions button.subscribed {
+        .news-card .actions button.liked, .news-card .actions button.subscribed {
             color: #00c6ff;
         }
 
-        /* Player */
-        .player-section {
+        .read-now-btn {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #007bff, #00c6ff);
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .read-now-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+            animation: glow 1.5s infinite;
+        }
+
+        .news-section {
             display: none;
             position: fixed;
             top: 0;
@@ -600,21 +585,18 @@
             z-index: 1001;
         }
 
-        .player {
+        .news-viewer {
             max-width: 800px;
             width: 90%;
             background: rgba(255, 255, 255, 0.15);
             padding: 20px;
             border-radius: 8px;
             animation: fadeInUp 0.5s ease;
+            overflow-y: auto;
+            max-height: 80vh;
         }
 
-        .player video, .player audio {
-            width: 100%;
-            max-height: 400px;
-        }
-
-        .player .close-player {
+        .news-viewer .close-news {
             position: absolute;
             top: 20px;
             right: 20px;
@@ -623,17 +605,35 @@
             color: #ffffff;
         }
 
-        .player .close-player:hover {
+        .news-viewer .close-news:hover {
             color: #00c6ff;
         }
 
-        .player .comments-section {
+        .news-viewer .news-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .news-viewer .news-meta {
+            font-size: 0.9rem;
+            color: #00c6ff;
+            margin-bottom: 1rem;
+        }
+
+        .news-viewer .news-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .news-viewer .comments-section {
             margin-top: 20px;
             max-height: 200px;
             overflow-y: auto;
         }
 
-        .player .comments-section input {
+        .news-viewer .comments-section input {
             width: 100%;
             padding: 10px;
             border: none;
@@ -642,7 +642,7 @@
             color: #ffffff;
         }
 
-        .player .comments-section button {
+        .news-viewer .comments-section button {
             padding: 10px 20px;
             background: linear-gradient(45deg, #007bff, #00c6ff);
             color: #ffffff;
@@ -652,20 +652,18 @@
             margin-top: 10px;
         }
 
-        .player .comments-section .comment {
+        .news-viewer .comments-section .comment {
             padding: 10px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             margin: 10px 0;
         }
 
-        /* Inaccessible State */
         .inaccessible {
             pointer-events: none;
             opacity: 0.5;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .navbar {
                 padding: 15px 20px;
@@ -706,21 +704,22 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <div class="navbar">
-        <div class="logo">SpudyTube</div>
+        <div class="logo">Spudy News</div>
         <div class="nav-card">
             <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
             <div class="nav-links" id="navLinks">
                 <a href="#" onclick="checkAuth(() => filterCategory('all'))">Home</a>
                 <a href="#" onclick="checkAuth(showSubscriptions)">Subscriptions</a>
-                <a href="#" onclick="checkAuth(showProfile)">Your Videos</a>
+                <a href="#" onclick="checkAuth(showProfile)">Your News</a>
             </div>
-            <input type="text" placeholder="Search videos..." id="searchBar" style="border: none; border-radius: 50px; padding: 5px; background: rgba(255, 255, 255, 0.2); color: #ffffff;">
+            <input type="text" placeholder="Search news..." id="searchBar" style="border: none; border-radius: 50px; padding: 5px; background: rgba(255, 255, 255, 0.2); color: #ffffff;">
             <select id="categoryFilter" style="border: none; border-radius: 50px; padding: 5px; background: rgba(255, 255, 255, 0.2); color: #ffffff;">
                 <option value="all">All</option>
-                <option value="video">Videos</option>
-                <option value="audio">Audio</option>
+                <option value="politics">Politics</option>
+                <option value="technology">Technology</option>
+                <option value="sports">Sports</option>
+                <option value="entertainment">Entertainment</option>
             </select>
             <button class="account-btn" id="accountBtn"><i class="fas fa-user"></i> Account</button>
             <div class="account-dropdown" id="accountDropdown">
@@ -740,40 +739,30 @@
         </div>
     </div>
 
-    <!-- Hero -->
     <div class="hero" id="hero">
         <div id="particles-js"></div>
         <div class="hero-content">
-            <h1>Welcome to SpudyTube</h1>
-            <div class="typing">Spudy Intelligence Technology</div>
-            <a href="#content" class="cta-button" onclick="checkAuth(() => scrollToContent())">Explore Now</a>
+            <h1>Welcome to Spudy News</h1>
+            <div class="typing">Your Daily News Source</div>
+            <a href="#content" class="cta-button" onclick="checkAuth(() => scrollToContent())">Read Now</a>
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="container" id="content">
-        <div class="upload-section" id="upload-section">
-            <h2>Upload Media</h2>
-            <input type="file" id="mediaInput" accept="video/*,audio/*">
-            <input type="text" id="mediaTitle" placeholder="Enter media title">
-            <button onclick="uploadMedia()">Upload</button>
-        </div>
         <div class="gallery" id="gallery"></div>
     </div>
 
-    <!-- Player -->
-    <div class="player-section" id="playerSection">
-        <span class="close-player" onclick="closePlayer()">×</span>
-        <div class="player" id="player">
+    <div class="news-section" id="newsSection">
+        <span class="close-news" onclick="closeNews()">×</span>
+        <div class="news-viewer" id="newsViewer">
             <div class="comments-section" id="commentsSection"></div>
         </div>
     </div>
 
-    <!-- Modals -->
     <div class="modal" id="loginModal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('login')">×</span>
-            <h2>Login to SpudyTube</h2>
+            <h2>Login to Spudy News</h2>
             <div class="form-card">
                 <div class="input-group">
                     <input type="text" id="loginUsername" placeholder="Username" oninput="validateInput(this)">
@@ -793,7 +782,7 @@
     <div class="modal" id="signupModal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('signup')">×</span>
-            <h2>Join SpudyTube</h2>
+            <h2>Join Spudy News</h2>
             <div class="form-card">
                 <div class="input-group">
                     <input type="text" id="signupUsername" placeholder="Username" oninput="validateInput(this)">
@@ -834,20 +823,19 @@
             <span class="close" onclick="closeModal('profile')">×</span>
             <h2>Your Profile</h2>
             <p id="profileUsername"></p>
-            <h3>Your Videos</h3>
-            <div id="userVideos"></div>
+            <h3>Your News</h3>
+            <div id="userNews"></div>
         </div>
     </div>
 
     <script>
-        // Initialize IndexedDB
         let db;
-        const request = indexedDB.open('SpudyTubeDB', 2);
+        const request = indexedDB.open('SpudyNewsDB', 1);
 
         request.onupgradeneeded = function(event) {
             db = event.target.result;
-            if (!db.objectStoreNames.contains('media')) {
-                db.createObjectStore('media', { keyPath: 'id', autoIncrement: true });
+            if (!db.objectStoreNames.contains('news')) {
+                db.createObjectStore('news', { keyPath: 'id', autoIncrement: true });
             }
             if (!db.objectStoreNames.contains('users')) {
                 db.createObjectStore('users', { keyPath: 'username' });
@@ -865,6 +853,7 @@
 
         request.onsuccess = function(event) {
             db = event.target.result;
+            preloadNews();
             checkCurrentUser();
         };
 
@@ -873,7 +862,53 @@
             alert('Failed to initialize database. Please try again.');
         };
 
-        // Particles.js
+        function preloadNews() {
+            const transaction = db.transaction(['news'], 'readwrite');
+            const store = transaction.objectStore('news');
+            const request = store.getAll();
+            request.onsuccess = function(event) {
+                if (event.target.result.length === 0) {
+                    const newsData = {
+                        title: '🎤 BREAKING MUSIC NEWS: A SONG THAT WILL STIR YOUR SOUL!',
+                        content: `🔥 EXCLUSIVE from Spudy TV 🔥
+
+🎵 ARTIST: Spudy
+🎶 SONG TITLE: Mai Vangu
+📆 RELEASE DATE: Next week, Monday
+🎥 OFFICIAL MUSIC VIDEO: Drops SAME DAY
+
+You’ve heard music… but you haven’t felt music like this before.
+Spudy is back — not just with a song, but with a deeply personal anthem that will move your heart and stay with you long after it ends.
+
+🌺 Mai Vangu is not just a melody — it’s a story. A tribute. A celebration of love, sacrifice, and strength. Inspired by the unshakable spirit of a mother, this song reaches into the most sacred places of our lives — the people who raised us, believed in us, and stood by us through everything.
+
+💔 Have you ever wanted to say thank you but didn’t know how?
+🌍 Have you ever longed to give your mother her flowers while she can still smell them?
+
+This is your song. This is our story.
+
+From the very first note of Mai Vangu, you’ll feel it — the warmth of home, the ache of memories, the pride in our roots. Spudy delivers vocals that cut deep, lyrics that speak loud, and emotion that can’t be faked.
+
+And just when you think it couldn’t hit harder — 🎬 the official music video drops alongside the track, bringing the song’s message to life in stunning visuals that will leave you breathless.
+
+🚨 Set your alarms. Tell your friends. Prepare your heart.
+Because this Monday, a cultural moment is coming.
+
+👉 Follow Spudy TV for countdowns, sneak peeks, and exclusive behind-the-scenes content.
+
+🎧 Mai Vangu isn’t just another release —
+It’s the sound of gratitude.
+It’s the voice of our mothers.
+It’s the anthem we didn’t know we needed… until now.`,
+                        category: 'entertainment',
+                        author: 'Spudy TV',
+                        date: new Date().toISOString()
+                    };
+                    store.add(newsData);
+                }
+            };
+        }
+
         particlesJS('particles-js', {
             particles: {
                 number: { value: 80, density: { enable: true, value_area: 800 } },
@@ -891,7 +926,6 @@
             }
         });
 
-        // User Management
         let currentUser = null;
 
         function checkCurrentUser() {
@@ -907,7 +941,6 @@
                         document.body.classList.remove('inaccessible');
                         document.getElementById('hero').classList.remove('inaccessible');
                         document.getElementById('content').style.display = 'block';
-                        document.getElementById('upload-section').style.display = 'block';
                         document.getElementById('navLinks').style.display = 'flex';
                         renderGallery();
                         scrollToContent();
@@ -932,7 +965,6 @@
             document.body.classList.add('inaccessible');
             document.getElementById('hero').classList.add('inaccessible');
             document.getElementById('content').style.display = 'none';
-            document.getElementById('upload-section').style.display = 'none';
             document.getElementById('navLinks').style.display = 'none';
             document.getElementById('gallery').innerHTML = '';
             document.getElementById('accountBtn').style.display = 'block';
@@ -989,7 +1021,6 @@
                     document.body.classList.remove('inaccessible');
                     document.getElementById('hero').classList.remove('inaccessible');
                     document.getElementById('content').style.display = 'block';
-                    document.getElementById('upload-section').style.display = 'block';
                     document.getElementById('navLinks').style.display = 'flex';
                     renderGallery();
                     scrollToContent();
@@ -1013,7 +1044,7 @@
             }
             const passwordValid = password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[!@#$%^&*]/.test(password);
             if (!passwordValid) {
-                error.textContent = 'Password does not meet requirements';
+                error.textContent = 'Password must be at least 8 characters with uppercase, lowercase, number, and special character';
                 return;
             }
             const transaction = db.transaction(['users'], 'readwrite');
@@ -1032,7 +1063,6 @@
                         document.body.classList.remove('inaccessible');
                         document.getElementById('hero').classList.remove('inaccessible');
                         document.getElementById('content').style.display = 'block';
-                        document.getElementById('upload-section').style.display = 'block';
                         document.getElementById('navLinks').style.display = 'flex';
                         renderGallery();
                         scrollToContent();
@@ -1080,7 +1110,7 @@
             }
             const passwordValid = newPassword.length >= 8 && /[A-Z]/.test(newPassword) && /[a-z]/.test(newPassword) && /[0-9]/.test(newPassword) && /[!@#$%^&*]/.test(newPassword);
             if (!passwordValid) {
-                error.textContent = 'New password does not meet requirements';
+                error.textContent = 'New password must be at least 8 characters with uppercase, lowercase, number, and special character';
                 return;
             }
             const transaction = db.transaction(['users'], 'readwrite');
@@ -1110,23 +1140,22 @@
                 return;
             }
             document.getElementById('profileUsername').textContent = `Username: ${currentUser.username}`;
-            const userVideos = document.getElementById('userVideos');
-            userVideos.innerHTML = '';
-            const transaction = db.transaction(['media'], 'readonly');
-            const store = transaction.objectStore('media');
+            const userNews = document.getElementById('userNews');
+            userNews.innerHTML = '';
+            const transaction = db.transaction(['news'], 'readonly');
+            const store = transaction.objectStore('news');
             const request = store.getAll();
             request.onsuccess = function(event) {
-                const mediaList = event.target.result.filter(media => media.uploader === currentUser.username);
-                mediaList.forEach(media => {
+                const newsList = event.target.result.filter(news => news.author === currentUser.username);
+                newsList.forEach(news => {
                     const div = document.createElement('div');
-                    div.innerHTML = `<p>${media.title}</p>`;
-                    userVideos.appendChild(div);
+                    div.innerHTML = `<p>${news.title}</p>`;
+                    userNews.appendChild(div);
                 });
                 showModal('profile');
             };
         }
 
-        // Authentication Check
         function checkAuth(callback) {
             if (currentUser) {
                 callback();
@@ -1139,7 +1168,6 @@
             document.getElementById('content').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Modals
         function showModal(type) {
             document.getElementById(`${type}Modal`).style.display = 'flex';
             document.getElementById(`${type}Username`)?.focus();
@@ -1177,70 +1205,63 @@
             showModal(type);
         }
 
-        // Navbar Toggle
         document.getElementById('menuToggle').addEventListener('click', function() {
             const navLinks = document.getElementById('navLinks');
             navLinks.classList.toggle('active');
         });
 
-        // Account Dropdown
         document.getElementById('accountBtn').addEventListener('click', function() {
             const dropdown = document.getElementById('accountDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
             this.classList.toggle('active');
         });
 
-        // Settings Dropdown
         document.getElementById('settingsBtn').addEventListener('click', function() {
             const dropdown = document.getElementById('settingsDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
             this.classList.toggle('active');
         });
 
-        // Render Gallery
         function renderGallery(filter = 'all', query = '') {
             if (!currentUser) return;
             const gallery = document.getElementById('gallery');
             gallery.innerHTML = '';
-            const transaction = db.transaction(['media'], 'readonly');
-            const store = transaction.objectStore('media');
+            const transaction = db.transaction(['news'], 'readonly');
+            const store = transaction.objectStore('news');
             const request = store.getAll();
             request.onsuccess = function(event) {
-                let mediaList = event.target.result;
+                let newsList = event.target.result;
                 if (filter !== 'all') {
-                    mediaList = mediaList.filter(media => media.type === filter);
+                    newsList = newsList.filter(news => news.category === filter);
                 }
                 if (query) {
-                    mediaList = mediaList.filter(media => media.title.toLowerCase().includes(query.toLowerCase()));
+                    newsList = newsList.filter(news => news.title.toLowerCase().includes(query.toLowerCase()));
                 }
-                mediaList.forEach(media => {
+                newsList.forEach(news => {
                     const transactionLikes = db.transaction(['likes'], 'readonly');
                     const storeLikes = transactionLikes.objectStore('likes');
                     const requestLikes = storeLikes.getAll();
                     requestLikes.onsuccess = function(event) {
-                        const likes = event.target.result.filter(like => like.mediaId === media.id).length;
-                        const isLiked = event.target.result.some(like => like.mediaId === media.id && like.user === currentUser?.username);
+                        const likes = event.target.result.filter(like => like.newsId === news.id).length;
+                        const isLiked = event.target.result.some(like => like.newsId === news.id && like.user === currentUser?.username);
                         const transactionSubs = db.transaction(['subscriptions'], 'readonly');
                         const storeSubs = transactionSubs.objectStore('subscriptions');
                         const requestSubs = storeSubs.getAll();
                         requestSubs.onsuccess = function(event) {
-                            const isSubscribed = event.target.result.some(sub => sub.mediaId === media.id && sub.user === currentUser?.username);
+                            const isSubscribed = event.target.result.some(sub => sub.newsId === news.id && sub.user === currentUser?.username);
                             const card = document.createElement('div');
-                            card.className = 'media-card';
+                            card.className = 'news-card';
                             card.innerHTML = `
-                                <img src="${media.thumbnail || 'https://via.placeholder.com/250x150'}" alt="${media.title}">
-                                <div class="info">
-                                    <div class="title">${media.title}</div>
-                                    <div class="channel">${media.uploader}</div>
-                                </div>
+                                <div class="title">${news.title}</div>
+                                <div class="content-preview">${news.content}</div>
+                                <div class="author">${news.author}</div>
+                                <div class="date">${new Date(news.date).toLocaleDateString()}</div>
                                 <div class="actions">
-                                    <button onclick="toggleLike(${media.id}, this)" class="${isLiked ? 'liked' : ''}"><i class="fas fa-thumbs-up"></i> ${likes}</button>
-                                    <button onclick="toggleSubscribe(${media.id}, this)" class="${isSubscribed ? 'subscribed' : ''}"><i class="fas fa-bell"></i> Subscribe</button>
+                                    <button onclick="toggleLike(${news.id}, this)" class="${isLiked ? 'liked' : ''}"><i class="fas fa-thumbs-up"></i> ${likes}</button>
+                                    <button onclick="toggleSubscribe(${news.id}, this)" class="${isSubscribed ? 'subscribed' : ''}"><i class="fas fa-bell"></i> Subscribe</button>
+                                    <button class="read-now-btn" onclick="readNews(${news.id})">Read Now</button>
                                 </div>
                             `;
-                            card.onclick = (e) => {
-                                if (!e.target.closest('.actions')) playMedia(media.id);
-                            };
                             gallery.appendChild(card);
                         };
                     };
@@ -1248,110 +1269,46 @@
             };
         }
 
-        // Upload Media
-        function uploadMedia() {
+        function readNews(id) {
             if (!currentUser) {
                 showModal('signup');
                 return;
             }
-            const fileInput = document.getElementById('mediaInput');
-            const titleInput = document.getElementById('mediaTitle');
-            const file = fileInput.files[0];
-            const title = titleInput.value.trim();
-
-            if (!file || !title) {
-                alert('Please select a file and enter a title.');
-                return;
-            }
-
-            if (file.size > 10 * 1024 * 1024) {
-                alert('File too large for this demo. Use smaller files (<10MB).');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const mediaData = {
-                    title: title,
-                    type: file.type.startsWith('video') ? 'video' : 'audio',
-                    dataUrl: e.target.result,
-                    thumbnail: file.type.startsWith('video') ? '' : 'https://via.placeholder.com/250x150',
-                    uploader: currentUser.username
-                };
-
-                if (mediaData.type === 'video') {
-                    const video = document.createElement('video');
-                    video.src = mediaData.dataUrl;
-                    video.currentTime = 1;
-                    video.onseeked = () => {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = 250;
-                        canvas.height = 150;
-                        canvas.getContext('2d').drawImage(video, 0, 0, 250, 150);
-                        mediaData.thumbnail = canvas.toDataURL('image/jpeg');
-                        saveToIndexedDB(mediaData);
-                    };
-                } else {
-                    saveToIndexedDB(mediaData);
-                }
-
-                fileInput.value = '';
-                titleInput.value = '';
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function saveToIndexedDB(mediaData) {
-            const transaction = db.transaction(['media'], 'readwrite');
-            const store = transaction.objectStore('media');
-            store.add(mediaData);
-            transaction.oncomplete = function() {
-                renderGallery();
-            };
-        }
-
-        // Play Media
-        function playMedia(id) {
-            if (!currentUser) {
-                showModal('signup');
-                return;
-            }
-            const transaction = db.transaction(['media'], 'readonly');
-            const store = transaction.objectStore('media');
+            const transaction = db.transaction(['news'], 'readonly');
+            const store = transaction.objectStore('news');
             const request = store.get(id);
             request.onsuccess = function(event) {
-                const media = event.target.result;
-                const playerSection = document.getElementById('playerSection');
-                const player = document.getElementById('player');
-                player.innerHTML = `
-                    ${media.type === 'video' ? `<video controls src="${media.dataUrl}"></video>` : `<audio controls src="${media.dataUrl}"></audio>`}
-                    <h3>${media.title}</h3>
-                    <p>Uploaded by: ${media.uploader}</p>
+                const news = event.target.result;
+                const newsSection = document.getElementById('newsSection');
+                const newsViewer = document.getElementById('newsViewer');
+                newsViewer.innerHTML = `
+                    <h2 class="news-title">${news.title}</h2>
+                    <div class="news-meta">By ${news.author} | ${new Date(news.date).toLocaleDateString()}</div>
+                    <div class="news-content">${news.content}</div>
                 `;
                 renderComments(id);
-                playerSection.style.display = 'flex';
+                newsSection.style.display = 'flex';
             };
         }
 
-        function closePlayer() {
-            const playerSection = document.getElementById('playerSection');
-            const player = document.getElementById('player');
-            player.innerHTML = '';
-            playerSection.style.display = 'none';
+        function closeNews() {
+            const newsSection = document.getElementById('newsSection');
+            const newsViewer = document.getElementById('newsViewer');
+            newsViewer.innerHTML = '';
+            newsSection.style.display = 'none';
         }
 
-        // Comments
-        function renderComments(mediaId) {
+        function renderComments(newsId) {
             const commentsSection = document.getElementById('commentsSection');
             commentsSection.innerHTML = `
                 <input type="text" id="commentInput" placeholder="Add a comment...">
-                <button onclick="addComment(${mediaId})">Post</button>
+                <button onclick="addComment(${newsId})">Post</button>
             `;
             const transaction = db.transaction(['comments'], 'readonly');
             const store = transaction.objectStore('comments');
             const request = store.getAll();
             request.onsuccess = function(event) {
-                const comments = event.target.result.filter(comment => comment.mediaId === mediaId);
+                const comments = event.target.result.filter(comment => comment.newsId === newsId);
                 comments.forEach(comment => {
                     const div = document.createElement('div');
                     div.className = 'comment';
@@ -1361,7 +1318,7 @@
             };
         }
 
-        function addComment(mediaId) {
+        function addComment(newsId) {
             if (!currentUser) {
                 showModal('signup');
                 return;
@@ -1370,15 +1327,14 @@
             if (!text) return;
             const transaction = db.transaction(['comments'], 'readwrite');
             const store = transaction.objectStore('comments');
-            store.add({ mediaId, user: currentUser.username, text });
+            store.add({ newsId, user: currentUser.username, text });
             transaction.oncomplete = function() {
-                renderComments(mediaId);
+                renderComments(newsId);
                 document.getElementById('commentInput').value = '';
             };
         }
 
-        // Likes
-        function toggleLike(mediaId, button) {
+        function toggleLike(newsId, button) {
             if (!currentUser) {
                 showModal('signup');
                 return;
@@ -1387,16 +1343,16 @@
             const store = transaction.objectStore('likes');
             const request = store.getAll();
             request.onsuccess = function(event) {
-                const isLiked = event.target.result.some(like => like.mediaId === mediaId && like.user === currentUser.username);
+                const isLiked = event.target.result.some(like => like.newsId === newsId && like.user === currentUser.username);
                 if (isLiked) {
                     const deleteTransaction = db.transaction(['likes'], 'readwrite');
                     const deleteStore = deleteTransaction.objectStore('likes');
-                    deleteStore.delete(event.target.result.find(like => like.mediaId === mediaId && like.user === currentUser.username).id);
+                    deleteStore.delete(event.target.result.find(like => like.newsId === newsId && like.user === currentUser.username).id);
                     deleteTransaction.oncomplete = function() {
                         renderGallery();
                     };
                 } else {
-                    store.add({ mediaId, user: currentUser.username });
+                    store.add({ newsId, user: currentUser.username });
                     transaction.oncomplete = function() {
                         renderGallery();
                     };
@@ -1404,8 +1360,7 @@
             };
         }
 
-        // Subscriptions
-        function toggleSubscribe(mediaId, button) {
+        function toggleSubscribe(newsId, button) {
             if (!currentUser) {
                 showModal('signup');
                 return;
@@ -1414,16 +1369,16 @@
             const store = transaction.objectStore('subscriptions');
             const request = store.getAll();
             request.onsuccess = function(event) {
-                const isSubscribed = event.target.result.some(sub => sub.mediaId === mediaId && sub.user === currentUser.username);
+                const isSubscribed = event.target.result.some(sub => sub.newsId === newsId && sub.user === currentUser.username);
                 if (isSubscribed) {
                     const deleteTransaction = db.transaction(['subscriptions'], 'readwrite');
                     const deleteStore = deleteTransaction.objectStore('subscriptions');
-                    deleteStore.delete(event.target.result.find(sub => sub.mediaId === mediaId && sub.user === currentUser.username).id);
+                    deleteStore.delete(event.target.result.find(sub => sub.newsId === newsId && sub.user === currentUser.username).id);
                     deleteTransaction.oncomplete = function() {
                         renderGallery();
                     };
                 } else {
-                    store.add({ mediaId, user: currentUser.username });
+                    store.add({ newsId, user: currentUser.username });
                     transaction.oncomplete = function() {
                         renderGallery();
                     };
@@ -1443,29 +1398,29 @@
             const request = store.getAll();
             request.onsuccess = function(event) {
                 const subs = event.target.result.filter(sub => sub.user === currentUser.username);
-                const mediaTransaction = db.transaction(['media'], 'readonly');
-                const mediaStore = mediaTransaction.objectStore('media');
-                const mediaRequest = mediaStore.getAll();
-                mediaRequest.onsuccess = function(event) {
-                    const mediaList = event.target.result.filter(media => subs.some(sub => sub.mediaId === media.id));
-                    mediaList.forEach(media => {
+                const newsTransaction = db.transaction(['news'], 'readonly');
+                const newsStore = newsTransaction.objectStore('news');
+                const newsRequest = newsStore.getAll();
+                newsRequest.onsuccess = function(event) {
+                    const newsList = event.target.result.filter(news => subs.some(sub => sub.newsId === news.id));
+                    newsList.forEach(news => {
                         const card = document.createElement('div');
-                        card.className = 'media-card';
+                        card.className = 'news-card';
                         card.innerHTML = `
-                            <img src="${media.thumbnail || 'https://via.placeholder.com/250x150'}" alt="${media.title}">
-                            <div class="info">
-                                <div class="title">${media.title}</div>
-                                <div class="channel">${media.uploader}</div>
+                            <div class="title">${news.title}</div>
+                            <div class="content-preview">${news.content}</div>
+                            <div class="author">${news.author}</div>
+                            <div class="date">${new Date(news.date).toLocaleDateString()}</div>
+                            <div class="actions">
+                                <button class="read-now-btn" onclick="readNews(${news.id})">Read Now</button>
                             </div>
                         `;
-                        card.onclick = () => playMedia(media.id);
                         gallery.appendChild(card);
                     });
                 };
             };
         }
 
-        // Search and Filter
         document.getElementById('searchBar').addEventListener('input', function(e) {
             renderGallery(document.getElementById('categoryFilter').value, e.target.value);
         });
@@ -1479,7 +1434,6 @@
             renderGallery(category, document.getElementById('searchBar').value);
         }
 
-        // Initial Render
         renderGallery();
     </script>
 </body>
