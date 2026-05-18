@@ -1,1568 +1,1832 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spudy News Premium - Daily Updates</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-    <style>
-        :root {
-            --bg-color: #071429;
-            --text-color: #ffffff;
-            --card-bg: rgba(255, 255, 255, 0.15);
-            --modal-bg: rgba(255, 255, 255, 0.2);
-            --input-bg: rgba(255, 255, 255, 0.25);
-            --accent-color: #00c6ff;
-            --navbar-bg: rgba(0, 51, 102, 0.4);
-        }
-
-        [data-theme="light"] {
-            --bg-color: #f5f5f5;
-            --text-color: #071429;
-            --card-bg: rgba(0, 0, 0, 0.1);
-            --modal-bg: rgba(255, 255, 255, 0.9);
-            --input-bg: rgba(0, 0, 0, 0.1);
-            --accent-color: #007bff;
-            --navbar-bg: rgba(255, 255, 255, 0.9);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            color: var(--text-color);
-            background: var(--bg-color);
-            overflow-x: hidden;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px var(--accent-color); }
-            50% { box-shadow: 0 0 20px var(--accent-color); }
-            100% { box-shadow: 0 0 5px var(--accent-color); }
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 15px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--navbar-bg);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-            z-index: 1000;
-            animation: fadeInUp 1s ease;
-        }
-
-        .navbar .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--text-color);
-        }
-
-        .navbar .premium-badge {
-            font-size: 0.8rem;
-            background: linear-gradient(45deg, #ffd700, #ffaa00);
-            color: #071429;
-            padding: 5px 10px;
-            border-radius: 15px;
-            margin-left: 10px;
-        }
-
-        .nav-card {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .navbar .menu-toggle {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: none;
-        }
-
-        .navbar .menu-toggle:hover, .navbar .menu-toggle:focus {
-            color: var(--accent-color);
-        }
-
-        .navbar .nav-links {
-            display: flex;
-            gap: 25px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
-
-        .navbar .nav-links.active {
-            opacity: 1;
-            pointer-events: auto;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .navbar .nav-links a {
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: background 0.4s, color 0.4s, transform 0.4s;
-        }
-
-        .navbar .nav-links a:hover, .navbar .nav-links a:focus {
-            background: rgba(0, 123, 255, 0.4);
-            color: var(--accent-color);
-            transform: scale(1.05);
-        }
-
-        .navbar .account-btn {
-            padding: 12px 25px;
-            background: linear-gradient(45deg, #003087, #007bff);
-            color: #ffffff;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: transform 0.4s, box-shadow 0.4s;
-        }
-
-        .navbar .account-btn:hover, .navbar .account-btn:focus {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
-            background: linear-gradient(45deg, #007bff, var(--accent-color));
-        }
-
-        .navbar .account-dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: var(--modal-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 123, 255, 0.3);
-            border-radius: 15px;
-            padding: 15px 0;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
-            min-width: 160px;
-            margin-top: 10px;
-        }
-
-        .navbar .account-btn.active + .account-dropdown {
-            display: block;
-            animation: slideIn 0.4s ease-in;
-        }
-
-        .navbar .account-dropdown a {
-            display: block;
-            padding: 12px 25px;
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: background 0.4s, transform 0.4s;
-        }
-
-        .navbar .account-dropdown a:hover, .navbar .account-dropdown a:focus {
-            background: rgba(0, 123, 255, 0.4);
-            color: var(--accent-color);
-            transform: translateX(6px);
-        }
-
-        .navbar .user-indicator {
-            padding: 12px 25px;
-            background: linear-gradient(45deg, #003087, #007bff);
-            color: #ffffff;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: transform 0.4s, box-shadow 0.4s;
-        }
-
-        .navbar .user-indicator:hover, .navbar .user-indicator:focus {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
-        }
-
-        .navbar .settings-btn {
-            padding: 12px 25px;
-            background: linear-gradient(45deg, #003087, #007bff);
-            color: #ffffff;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: transform 0.4s, box-shadow 0.4s;
-        }
-
-        .navbar .settings-btn:hover, .navbar .settings-btn:focus {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
-            background: linear-gradient(45deg, #007bff, var(--accent-color));
-        }
-
-        .navbar .settings-dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: var(--modal-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 123, 255, 0.3);
-            border-radius: 15px;
-            padding: 15px 0;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
-            min-width: 180px;
-            margin-top: 10px;
-        }
-
-        .navbar .settings-btn.active + .settings-dropdown {
-            display: block;
-            animation: slideIn 0.4s ease-in;
-        }
-
-        .navbar .settings-dropdown a {
-            display: block;
-            padding: 12px 25px;
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: background 0.4s, transform 0.4s;
-        }
-
-        .navbar .settings-dropdown a:hover, .navbar .settings-dropdown a:focus {
-            background: rgba(0, 123, 255, 0.4);
-            color: var(--accent-color);
-            transform: translateX(6px);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1003;
-            justify-content: center;
-            align-items: center;
-            pointer-events: auto;
-            transition: opacity 0.5s ease;
-        }
-
-        .modal-content {
-            background: var(--modal-bg);
-            backdrop-filter: blur(20px);
-            padding: 40px;
-            border-radius: 25px;
-            border: 1px solid rgba(0, 123, 255, 0.25);
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            animation: fadeInUp 0.6s ease;
-            box-shadow: 0 12px 35px rgba(0, 123, 255, 0.4);
-        }
-
-        .modal-content h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--text-color);
-        }
-
-        .modal-content .form-card {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 123, 255, 0.25);
-            margin-bottom: 20px;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 14px 45px 14px 20px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            background: var(--input-bg);
-            color: var(--text-color);
-            transition: box-shadow 0.4s, border 0.4s;
-        }
-
-        .modal-content input:focus {
-            box-shadow: 0 0 12px rgba(0, 123, 255, 0.6);
-            border: 1px solid var(--accent-color);
-            outline: none;
-        }
-
-        .modal-content input.valid {
-            border: 1px solid #00ff00;
-            box-shadow: 0 0 12px rgba(0, 255, 0, 0.6);
-        }
-
-        .modal-content input.invalid {
-            border: 1px solid #ff4d4d;
-            box-shadow: 0 0 12px rgba(255, 77, 77, 0.6);
-        }
-
-        .modal-content .input-group {
-            position: relative;
-            margin: 12px 0;
-        }
-
-        .modal-content .input-group i {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--accent-color);
-            font-size: 1rem;
-        }
-
-        .modal-content button {
-            padding: 14px 35px;
-            background: linear-gradient(45deg, #007bff, var(--accent-color));
-            color: #ffffff;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.4s, box-shadow 0.4s;
-        }
-
-        .modal-content button:hover, .modal-content button:focus {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
-            animation: glow 1.5s infinite;
-        }
-
-        .modal-content .close {
-            position: absolute;
-            top: 15px;
-            right: 25px;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: var(--text-color);
-        }
-
-        .modal-content .close:hover, .modal-content .close:focus {
-            color: var(--accent-color);
-        }
-
-        .modal-content .error {
-            color: #ff4d4d;
-            font-size: 0.9rem;
-            margin-top: 12px;
-        }
-
-        .modal-content .switch-btn {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 10px 25px;
-            background: linear-gradient(45deg, #007bff, var(--accent-color));
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            transition: transform 0.4s, box-shadow 0.4s;
-        }
-
-        .modal-content .switch-btn:hover, .modal-content .switch-btn:focus {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
-        }
-
-        .modal-content .login-notice {
-            display: none;
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 123, 255, 0.3);
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 12px;
-            font-size: 0.9rem;
-            color: #ff4d4d;
-            animation: slideIn 0.4s ease-in;
-        }
-
-        .modal-content .login-notice.active {
-            display: block;
-        }
-
-        .modal-content .password-suggestion {
-            font-size: 0.9rem;
-            color: var(--accent-color);
-            margin-top: 8px;
-            word-break: break-all;
-        }
-
-        .modal-content .generate-password {
-            padding: 10px 20px;
-            background: linear-gradient(45deg, #003087, #007bff);
-            color: #ffffff;
-            border: none;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            margin-left: 12px;
-            transition: transform 0.4s, box-shadow 0.4s;
-        }
-
-        .modal-content .generate-password:hover, .modal-content .generate-password:focus {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
-        }
-
-        .hero {
-            position: relative;
-            height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            overflow: hidden;
-            background: url('https://images.unsplash.com/photo-1518709268805-4e9042af592e?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
-            z-index: 1;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(7, 20, 41, 0.75);
-            z-index: 2;
-        }
-
-        #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 3;
-        }
-
-        .hero-content {
-            z-index: 4;
-            animation: fadeInUp 1.3s ease;
-        }
-
-        .hero-content h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 4.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--text-color);
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero-content .typing {
-            font-size: 2rem;
-            margin-bottom: 2.5rem;
-            color: var(--accent-color);
-            height: 2.5rem;
-            font-weight: 500;
-        }
-
-        .cta-button {
-            padding: 1.3rem 4rem;
-            background: linear-gradient(45deg, #007bff, var(--accent-color));
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 500;
-            transition: transform 0.4s, box-shadow 0.4s;
-            z-index: 5;
-        }
-
-        .cta-button:hover, .cta-button:focus {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 25px rgba(0, 123, 255, 0.7);
-            animation: glow 1.5s infinite;
-        }
-
-        .container {
-            padding: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-            margin-top: 20px;
-            animation: fadeInUp 1.2s ease;
-            z-index: 1;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .news-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            animation: fadeInUp 1.2s ease;
-            transition: transform 0.4s, box-shadow 0.4s;
-        }
-
-        .news-card:hover, .news-card:focus {
-            transform: translateY(-6px);
-            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
-        }
-
-        .news-card .title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--text-color);
-        }
-
-        .read-now-btn {
-            padding: 12px 25px;
-            background: linear-gradient(45deg, #007bff, var(--accent-color));
-            color: #ffffff;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: transform 0.4s, box-shadow 0.4s;
-            width: 100%;
-        }
-
-        .read-now-btn:hover, .read-now-btn:focus {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
-            animation: glow 1.5s infinite;
-        }
-
-        .news-section {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
-            transition: opacity 0.5s ease;
-        }
-
-        .news-viewer {
-            max-width: 900px;
-            width: 95%;
-            background: var(--modal-bg);
-            padding: 30px;
-            border-radius: 12px;
-            animation: fadeInUp 0.6s ease;
-            overflow-y: auto;
-            max-height: 85vh;
-            box-shadow: 0 12px 35px rgba(0, 123, 255, 0.4);
-        }
-
-        .news-viewer .close-news {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: var(--text-color);
-        }
-
-        .news-viewer .close-news:hover, .news-viewer .close-news:focus {
-            color: var(--accent-color);
-        }
-
-        .news-viewer .news-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            margin-bottom: 1.2rem;
-            color: var(--text-color);
-        }
-
-        .news-viewer .news-meta {
-            font-size: 1rem;
-            color: var(--accent-color);
-            margin-bottom: 1.2rem;
-            font-weight: 500;
-        }
-
-        .news-viewer .news-content {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
-            color: var(--text-color);
-        }
-
-        .news-viewer .comments-section {
-            margin-top: 25px;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .news-viewer .comments-section input {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 50px;
-            background: var(--input-bg);
-            color: var(--text-color);
-            font-size: 1rem;
-        }
-
-        .news-viewer .comments-section button {
-            padding: 12px 25px;
-            background: linear-gradient(45deg, #007bff, var(--accent-color));
-            color: #ffffff;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-top: 12px;
-            font-size: 1rem;
-            transition: transform 0.4s, box-shadow 0.4s;
-        }
-
-        .news-viewer .comments-section button:hover, .news-viewer .comments-section button:focus {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
-        }
-
-        .news-viewer .comments-section .comment {
-            padding: 12px;
-            background: var(--card-bg);
-            border-radius: 10px;
-            margin: 12px 0;
-            font-size: 0.9rem;
-        }
-
-        .inaccessible {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 15px 25px;
-            }
-
-            .navbar .menu-toggle {
-                display: block;
-            }
-
-            .navbar .nav-links {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: var(--navbar-bg);
-                backdrop-filter: blur(15px);
-                flex-direction: column;
-                padding: 25px;
-                display: none;
-            }
-
-            .navbar .nav-links.active {
-                display: flex;
-            }
-
-            .container {
-                padding: 15px;
-            }
-
-            .hero-content h1 {
-                font-size: 3rem;
-            }
-
-            .hero-content .typing {
-                font-size: 1.5rem;
-            }
-
-            .news-card .title {
-                font-size: 1.2rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spudy AI Music</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07090F;
+  --bg2: #0C0E17;
+  --bg3: #121520;
+  --bg4: #181C28;
+  --bg5: #1E2232;
+  --accent: #C8FF00;
+  --accent2: #7B5EFF;
+  --accent3: #FF5E8F;
+  --accent4: #00E5FF;
+  --text: #F2F2F8;
+  --text2: #8890A8;
+  --text3: #4A5268;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.11);
+  --border3: rgba(255,255,255,0.18);
+  --radius: 14px;
+  --r-sm: 8px;
+  --r-xs: 6px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;display:flex;overflow:hidden;user-select:none}
+
+/* ── SIDEBAR ── */
+.sidebar{width:240px;min-width:240px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;position:relative;z-index:10;transition:width .2s}
+.logo{padding:26px 22px 18px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo:hover .logo-icon{box-shadow:0 0 22px rgba(200,255,0,.35)}
+.logo-icon{width:36px;height:36px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;transition:box-shadow .3s;flex-shrink:0;animation:pulse-logo 3s ease-in-out infinite}
+@keyframes pulse-logo{0%,100%{box-shadow:0 0 0 0 rgba(200,255,0,.35)}50%{box-shadow:0 0 18px 5px rgba(200,255,0,.12)}}
+.logo-text{font-size:20px;font-weight:800;letter-spacing:-.5px}
+.logo-text span{color:var(--accent)}
+
+.sidebar-nav{padding:6px 10px;flex:1;overflow-y:auto;scrollbar-width:none}
+.sidebar-nav::-webkit-scrollbar{display:none}
+.nav-section{margin-bottom:22px}
+.nav-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;padding:0 10px;margin-bottom:5px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r-sm);font-size:13px;color:var(--text2);cursor:pointer;transition:all .15s;font-weight:500;margin-bottom:1px;position:relative}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:rgba(200,255,0,.09);color:var(--accent)}
+.nav-item svg{width:15px;height:15px;opacity:.7;flex-shrink:0;transition:opacity .15s}
+.nav-item.active svg,.nav-item:hover svg{opacity:1}
+.nav-badge{margin-left:auto;background:var(--accent3);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;letter-spacing:.3px}
+.nav-plays{margin-left:auto;font-size:10px;color:var(--text3);font-family:'Space Mono',monospace}
+
+.sidebar-bottom{padding:14px 10px;border-top:1px solid var(--border)}
+.credits-bar{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 13px;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
+.credits-bar:hover{border-color:var(--border2)}
+.credits-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.credits-label{font-size:11px;color:var(--text3)}
+.credits-count{font-size:13px;font-weight:700}
+.credits-track{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.credits-fill{height:100%;width:60%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .8s}
+.credits-detail{font-size:10px;color:var(--text3)}
+.upgrade-btn{width:100%;padding:10px;background:var(--accent);color:#07090F;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:6px}
+.upgrade-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(200,255,0,.3)}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;position:relative}
+
+/* ── TOPBAR ── */
+.topbar{padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;position:relative;z-index:5}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-title{font-size:19px;font-weight:700}
+.topbar-sub{font-size:12px;color:var(--text3);font-family:'Space Mono',monospace}
+.topbar-actions{display:flex;align-items:center;gap:8px;position:relative}
+.btn-ghost{padding:7px 14px;background:transparent;border:1px solid var(--border2);color:var(--text2);border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-size:12px;cursor:pointer;transition:all .15s;font-weight:500;display:flex;align-items:center;gap:6px}
+.btn-ghost:hover{border-color:var(--border3);color:var(--text);background:var(--bg3)}
+.btn-ghost.active{border-color:var(--accent2);color:var(--accent2);background:rgba(123,94,255,.08)}
+.btn-accent{padding:7px 16px;background:var(--accent);color:#07090F;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.btn-accent:hover{box-shadow:0 4px 16px rgba(200,255,0,.3);transform:translateY(-1px)}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7B5EFF,#C8FF00);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#07090F;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0}
+.user-avatar:hover{border-color:var(--accent)}
+
+/* ── DROPDOWNS ── */
+.dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:8px;min-width:240px;z-index:100;animation:dropIn .15s ease;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.dropdown.hidden{display:none}
+.dropdown-header{padding:10px 12px 8px;border-bottom:1px solid var(--border);margin-bottom:6px}
+.dropdown-title{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+.dropdown-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r-sm);cursor:pointer;transition:all .15s;font-size:13px;color:var(--text2);font-weight:500}
+.dropdown-item:hover{background:var(--bg4);color:var(--text)}
+.dropdown-item svg{width:15px;height:15px;opacity:.7}
+.dropdown-item.danger{color:var(--accent3)}
+.dropdown-item.danger:hover{background:rgba(255,94,143,.1)}
+.dropdown-sep{height:1px;background:var(--border);margin:6px 0}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:28px 28px 16px;scrollbar-width:thin;scrollbar-color:var(--bg5) transparent}
+.content::-webkit-scrollbar{width:4px}
+.content::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px}
+
+/* ── TABS ── */
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CREATE PANEL ── */
+.create-panel{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:28px;position:relative;overflow:hidden}
+.create-panel::before{content:'';position:absolute;top:-80px;right:-80px;width:240px;height:240px;background:radial-gradient(circle,rgba(123,94,255,.1) 0%,transparent 70%);pointer-events:none}
+.create-panel::after{content:'';position:absolute;bottom:-50px;left:20%;width:180px;height:180px;background:radial-gradient(circle,rgba(200,255,0,.05) 0%,transparent 70%);pointer-events:none}
+.create-header{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.create-title{font-size:16px;font-weight:700}
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.5px}
+.badge-new{background:var(--accent);color:#07090F}
+.badge-beta{background:var(--accent2);color:#fff}
+.badge-hot{background:var(--accent3);color:#fff}
+
+.mode-tabs{display:flex;gap:3px;background:var(--bg3);padding:4px;border-radius:var(--r-sm);margin-bottom:16px;border:1px solid var(--border)}
+.mode-tab{flex:1;padding:7px 10px;background:transparent;border:none;border-radius:var(--r-xs);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.mode-tab:hover{color:var(--text2)}
+.mode-tab.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 6px rgba(0,0,0,.4)}
+
+.suggested-prompts{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.prompt-chip{padding:5px 11px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text2);cursor:pointer;transition:all .15s;font-weight:500}
+.prompt-chip:hover{border-color:var(--accent2);color:var(--accent2);background:rgba(123,94,255,.06)}
+.prompt-chip.active{border-color:var(--accent2);color:var(--accent2);background:rgba(123,94,255,.1)}
+
+.prompt-area{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;transition:border-color .15s}
+.prompt-area:focus-within{border-color:var(--border2)}
+.prompt-textarea{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:'Syne',sans-serif;font-size:14px;resize:none;min-height:68px;line-height:1.65}
+.prompt-textarea::placeholder{color:var(--text3)}
+.prompt-controls{display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap;gap:8px}
+.prompt-tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{padding:3px 9px;background:var(--bg4);border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;font-weight:500}
+.tag:hover{border-color:var(--accent);color:var(--accent);background:rgba(200,255,0,.05)}
+.tag.used{border-color:rgba(200,255,0,.3);color:rgba(200,255,0,.6)}
+.char-count{font-size:11px;color:var(--text3);font-family:'Space Mono',monospace}
+.char-count.warn{color:var(--accent3)}
+
+.create-options{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.option-toggle{display:flex;align-items:center;gap:7px;padding:7px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;transition:all .15s;font-size:12px;color:var(--text2);font-weight:500}
+.option-toggle:hover{border-color:var(--border2);color:var(--text)}
+.option-toggle.active{border-color:var(--accent2);color:var(--accent2);background:rgba(123,94,255,.08)}
+.toggle-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);transition:all .15s;flex-shrink:0}
+.option-toggle.active .toggle-dot{background:var(--accent2);box-shadow:0 0 6px var(--accent2)}
+
+.create-bottom{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.style-inputs{display:flex;gap:8px;flex:1;min-width:0}
+.style-input-wrap{flex:1;position:relative;min-width:0}
+.style-input{width:100%;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-family:'Syne',sans-serif;font-size:12px;outline:none;transition:border-color .15s}
+.style-input::placeholder{color:var(--text3)}
+.style-input:focus{border-color:var(--border2)}
+.style-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.5);max-height:200px;overflow-y:auto;display:none}
+.style-dropdown.open{display:block;animation:dropIn .12s ease}
+.style-opt{padding:8px 12px;font-size:12px;cursor:pointer;color:var(--text2);transition:all .15s;display:flex;align-items:center;gap:8px}
+.style-opt:hover,.style-opt.selected{background:var(--bg4);color:var(--text)}
+.style-opt-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.generate-btn{padding:10px 24px;background:var(--accent);color:#07090F;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px;white-space:nowrap;letter-spacing:.3px;flex-shrink:0}
+.generate-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(200,255,0,.38)}
+.generate-btn:active{transform:translateY(0)}
+.generate-btn.loading{background:var(--bg3);color:var(--text2);cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+/* ── GENERATING PANEL ── */
+.generating-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:22px;display:none}
+.generating-panel.visible{display:block;animation:fadeIn .2s ease}
+.gen-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.gen-spinner{width:18px;height:18px;border:2px solid var(--bg4);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gen-title{font-size:14px;font-weight:700}
+.gen-prompt-text{font-size:11px;color:var(--text3);margin-top:2px;font-family:'Space Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:360px}
+.gen-status{font-size:10px;color:var(--accent);font-weight:600;margin-left:auto;font-family:'Space Mono',monospace}
+.gen-tracks{display:flex;gap:10px}
+.gen-track{flex:1;background:var(--bg3);border-radius:var(--r-sm);padding:13px;border:1px solid var(--border)}
+.gen-track-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.gen-track-label{font-size:11px;font-weight:700;color:var(--accent2)}
+.gen-pct{font-size:11px;color:var(--text3);font-family:'Space Mono',monospace}
+.gen-progress-track{height:2px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:8px}
+.gen-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .25s}
+.gen-waveform{display:flex;align-items:center;gap:2px;height:28px}
+.gen-wave-bar{flex:1;border-radius:2px;background:var(--text3);animation:gen-wave .7s ease-in-out infinite alternate}
+@keyframes gen-wave{0%{transform:scaleY(.15)}100%{transform:scaleY(1)}}
+
+/* ── SECTION HEADERS ── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:7px}
+.section-actions{display:flex;gap:8px;align-items:center}
+.see-all{font-size:11px;color:var(--accent2);cursor:pointer;font-weight:600;padding:4px 10px;border:1px solid rgba(123,94,255,.2);border-radius:20px;transition:all .15s}
+.see-all:hover{background:rgba(123,94,255,.1);border-color:rgba(123,94,255,.4)}
+.sort-btn{font-size:11px;color:var(--text3);cursor:pointer;padding:4px 8px;border:1px solid var(--border);border-radius:var(--r-xs);transition:all .15s;font-weight:600}
+.sort-btn:hover{color:var(--text2);border-color:var(--border2)}
+
+/* ── SONG CARDS ── */
+.songs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:28px}
+.song-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .2s;position:relative}
+.song-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,0,0,.45)}
+.song-card.active{border-color:rgba(200,255,0,.4);box-shadow:0 0 24px rgba(200,255,0,.08)}
+.song-thumb{aspect-ratio:1;width:100%;position:relative;overflow:hidden}
+.song-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative}
+.song-play-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;gap:10px}
+.song-card:hover .song-play-overlay,.song-card.active .song-play-overlay{opacity:1}
+.play-circle{width:46px;height:46px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 22px rgba(200,255,0,.45);transition:transform .15s;flex-shrink:0}
+.play-circle:hover{transform:scale(1.1)}
+.play-circle svg{width:18px;height:18px;fill:#07090F;margin-left:2px}
+.more-circle{width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0}
+.more-circle:hover{background:rgba(255,255,255,.25)}
+.more-circle svg{width:14px;height:14px;fill:white}
+.song-info{padding:11px 13px 13px}
+.song-name{font-size:13px;font-weight:700;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.song-meta{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:6px}
+.song-genre{color:var(--text2);font-size:11px;font-weight:600;font-family:'Syne',sans-serif}
+.song-duration{color:var(--text3);font-family:'Space Mono',monospace}
+.song-wave{display:flex;align-items:center;gap:2px;margin-top:8px;height:18px}
+.wave-bar{width:3px;border-radius:2px;background:var(--text3);animation:wave-idle 2.2s ease-in-out infinite}
+.song-card.active .wave-bar{background:var(--accent);animation:wave-play .55s ease-in-out infinite alternate}
+@keyframes wave-idle{0%,100%{opacity:.25}50%{opacity:.55}}
+@keyframes wave-play{0%{transform:scaleY(.2)}100%{transform:scaleY(1)}}
+
+/* ── FEATURED MOODS ── */
+.featured-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.featured-card{border-radius:var(--radius);padding:18px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;min-height:110px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid rgba(255,255,255,.05)}
+.featured-card::before{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 65%)}
+.featured-card:hover{transform:translateY(-3px);box-shadow:0 18px 46px rgba(0,0,0,.55)}
+.featured-card .fc-emoji{position:absolute;top:14px;right:14px;font-size:30px;transition:transform .2s}
+.featured-card:hover .fc-emoji{transform:scale(1.15) rotate(-5deg)}
+.featured-card .fc-title{font-size:14px;font-weight:700;position:relative;z-index:1}
+.featured-card .fc-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;position:relative;z-index:1}
+.featured-card .fc-use-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:6px 14px;font-size:11px;font-weight:700;color:#fff;opacity:0;transition:opacity .2s;z-index:2;backdrop-filter:blur(4px)}
+.featured-card:hover .fc-use-btn{opacity:1}
+
+/* ── TRENDING LIST ── */
+.trending-list{display:flex;flex-direction:column;gap:1px;margin-bottom:28px}
+.trend-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;position:relative}
+.trend-item:hover{background:var(--bg2)}
+.trend-item.playing{background:rgba(200,255,0,.04)}
+.trend-num{font-size:12px;color:var(--text3);font-family:'Space Mono',monospace;width:18px;text-align:center;flex-shrink:0}
+.trend-rank-change{font-size:9px;color:var(--text3);width:14px;text-align:center;flex-shrink:0}
+.trend-rank-change.up{color:#4dff99}
+.trend-rank-change.down{color:var(--accent3)}
+.trend-thumb{width:40px;height:40px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;transition:transform .15s}
+.trend-item:hover .trend-thumb{transform:scale(1.08)}
+.trend-info{flex:1;min-width:0}
+.trend-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trend-detail{font-size:11px;color:var(--text3);margin-top:1px}
+.trend-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.trend-plays{font-size:11px;color:var(--text3);font-family:'Space Mono',monospace;min-width:40px;text-align:right}
+.like-btn{background:transparent;border:none;cursor:pointer;padding:5px;color:var(--text3);transition:all .15s;border-radius:6px;display:flex;align-items:center}
+.like-btn:hover{color:var(--accent3);background:rgba(255,94,143,.1)}
+.like-btn.liked{color:var(--accent3)}
+.like-btn svg{width:14px;height:14px;transition:transform .2s}
+.like-btn:hover svg{transform:scale(1.2)}
+.trend-duration{font-size:11px;color:var(--text3);font-family:'Space Mono',monospace;width:34px;text-align:right}
+.trend-add-btn{background:transparent;border:1px solid var(--border);cursor:pointer;padding:4px 8px;color:var(--text3);transition:all .15s;border-radius:var(--r-xs);font-family:'Syne',sans-serif;font-size:10px;font-weight:600;opacity:0}
+.trend-item:hover .trend-add-btn{opacity:1}
+.trend-add-btn:hover{border-color:var(--accent2);color:var(--accent2);background:rgba(123,94,255,.08)}
+
+/* ── CONTEXT MENU ── */
+.ctx-menu{position:fixed;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:6px;min-width:180px;z-index:200;box-shadow:0 20px 60px rgba(0,0,0,.7);animation:dropIn .12s ease}
+.ctx-menu.hidden{display:none}
+.ctx-item{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:var(--r-sm);cursor:pointer;transition:all .15s;font-size:12px;color:var(--text2);font-weight:500}
+.ctx-item:hover{background:var(--bg4);color:var(--text)}
+.ctx-item svg{width:14px;height:14px;opacity:.7}
+.ctx-item.danger{color:var(--accent3)}
+.ctx-item.danger:hover{background:rgba(255,94,143,.1)}
+.ctx-sep{height:1px;background:var(--border);margin:5px 0}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:flex;align-items:center;justify-content:center;animation:fadeIn .2s ease;backdrop-filter:blur(6px)}
+.modal-overlay.hidden{display:none}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:0;width:100%;max-width:440px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.8)}
+.modal-header{padding:24px 24px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-title{font-size:18px;font-weight:700}
+.modal-close{background:var(--bg3);border:none;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .15s;font-size:16px}
+.modal-close:hover{background:var(--bg4);color:var(--text)}
+.modal-body{padding:0 24px 24px}
+.modal-footer{padding:20px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+
+/* ── PRICING PLANS ── */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.plan-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .2s;position:relative}
+.plan-card:hover{border-color:var(--border2)}
+.plan-card.popular{border-color:rgba(200,255,0,.35);background:rgba(200,255,0,.03)}
+.plan-card .popular-label{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#07090F;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;white-space:nowrap}
+.plan-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.plan-price{font-size:22px;font-weight:800;margin-bottom:8px;letter-spacing:-1px}
+.plan-price span{font-size:12px;font-weight:500;color:var(--text2)}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:5px}
+.plan-features li{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px}
+.plan-features li::before{content:'✓';color:var(--accent);font-weight:700;font-size:11px}
+
+/* ── DETAIL VIEW ── */
+.song-detail{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:20px;display:none}
+.song-detail.visible{display:block;animation:fadeIn .2s ease}
+.song-detail-top{display:flex;gap:20px;margin-bottom:20px}
+.song-detail-art{width:120px;height:120px;flex-shrink:0;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:52px}
+.song-detail-info{flex:1;min-width:0}
+.song-detail-name{font-size:22px;font-weight:800;margin-bottom:4px}
+.song-detail-genre{font-size:13px;color:var(--text2);margin-bottom:12px}
+.song-detail-stats{display:flex;gap:16px}
+.song-detail-stat{font-size:12px;color:var(--text3)}
+.song-detail-stat strong{color:var(--text2);font-size:13px;display:block}
+.song-detail-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.song-detail-waveform{height:52px;display:flex;align-items:center;gap:2px;margin:16px 0;cursor:pointer;position:relative}
+.detail-wave-bar{flex:1;border-radius:2px;background:var(--text3);transition:background .2s;min-width:2px}
+.song-detail-waveform.playing .detail-wave-bar{background:var(--accent);animation:wave-play .5s ease-in-out infinite alternate}
+.song-detail-waveform .progress-line{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);left:30%;pointer-events:none}
+.song-detail-tags{display:flex;gap:6px;flex-wrap:wrap}
+.song-detail-tag{padding:4px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--text2);font-weight:500}
+
+/* ── LIBRARY TAB ── */
+.library-filters{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.filter-btn{padding:5px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--text2);cursor:pointer;transition:all .15s;font-weight:600}
+.filter-btn:hover{border-color:var(--border2);color:var(--text)}
+.filter-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,255,0,.06)}
+.library-table{width:100%;border-collapse:collapse}
+.library-table th{text-align:left;font-size:11px;color:var(--text3);padding:8px 12px;border-bottom:1px solid var(--border);font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+.library-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.03);font-size:13px;vertical-align:middle}
+.library-table tr{cursor:pointer;transition:background .1s}
+.library-table tbody tr:hover{background:rgba(255,255,255,.025)}
+.library-table tbody tr.playing td{color:var(--accent)}
+.lib-song-cell{display:flex;align-items:center;gap:10px}
+.lib-thumb{width:36px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.lib-song-name{font-size:13px;font-weight:600}
+.lib-song-genre{font-size:11px;color:var(--text3)}
+.lib-plays{font-size:12px;color:var(--text3);font-family:'Space Mono',monospace}
+.lib-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
+.library-table tbody tr:hover .lib-actions{opacity:1}
+.lib-action-btn{background:transparent;border:none;cursor:pointer;padding:4px;color:var(--text3);transition:color .15s;border-radius:4px}
+.lib-action-btn:hover{color:var(--text)}
+
+/* ── EXPLORE TAB ── */
+.genre-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.genre-card{border-radius:var(--radius);padding:20px 16px;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.05);position:relative;overflow:hidden;min-height:80px}
+.genre-card:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.genre-card .gc-emoji{font-size:28px;margin-bottom:8px;display:block}
+.genre-card .gc-name{font-size:14px;font-weight:700}
+.genre-card .gc-count{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px}
+.genre-card::after{content:'→';position:absolute;right:14px;bottom:14px;font-size:16px;opacity:.4;transition:opacity .2s}
+.genre-card:hover::after{opacity:.8}
+
+/* ── CHARTS TAB ── */
+.chart-period-tabs{display:flex;gap:4px;background:var(--bg3);padding:3px;border-radius:var(--r-sm);margin-bottom:18px;border:1px solid var(--border);width:fit-content}
+.chart-period-tab{padding:5px 14px;background:transparent;border:none;border-radius:var(--r-xs);font-family:'Syne',sans-serif;font-size:11px;font-weight:600;color:var(--text3);cursor:pointer;transition:all .15s}
+.chart-period-tab.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.chart-table{width:100%;border-collapse:collapse;margin-bottom:24px}
+.chart-table th{text-align:left;font-size:10px;color:var(--text3);padding:7px 12px;border-bottom:1px solid var(--border);font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.chart-table td{padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+.chart-table tr{cursor:pointer;transition:background .1s}
+.chart-table tbody tr:hover{background:rgba(255,255,255,.02)}
+.chart-rank{font-size:18px;font-weight:800;color:var(--text3);width:30px;font-family:'Space Mono',monospace}
+.chart-rank.top{color:var(--accent)}
+.chart-bar-wrap{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.chart-bar{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .6s ease}
+
+/* ── COMMUNITY TAB ── */
+.community-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px}
+.community-feed{display:flex;flex-direction:column;gap:10px}
+.community-post{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:border-color .15s;cursor:pointer}
+.community-post:hover{border-color:var(--border2)}
+.post-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.post-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.post-user{font-size:13px;font-weight:600}
+.post-time{font-size:11px;color:var(--text3)}
+.post-song{background:var(--bg3);border-radius:var(--r-sm);padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:10px;transition:background .15s}
+.post-song:hover{background:var(--bg4)}
+.post-song-art{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.post-song-name{font-size:13px;font-weight:600}
+.post-song-genre{font-size:11px;color:var(--text3)}
+.post-caption{font-size:13px;color:var(--text2);margin-bottom:10px;line-height:1.5}
+.post-actions{display:flex;gap:14px}
+.post-action{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text3);cursor:pointer;transition:color .15s;font-weight:600}
+.post-action:hover{color:var(--text2)}
+.post-action.liked{color:var(--accent3)}
+.post-action svg{width:14px;height:14px}
+.leaderboard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.leaderboard-title{font-size:13px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.lb-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:all .15s}
+.lb-item:last-child{border-bottom:none}
+.lb-item:hover{transform:translateX(2px)}
+.lb-rank{font-size:14px;font-weight:800;width:20px;flex-shrink:0;font-family:'Space Mono',monospace}
+.lb-rank.gold{color:#FFD700}
+.lb-rank.silver{color:#C0C0C0}
+.lb-rank.bronze{color:#CD7F32}
+.lb-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.lb-name{flex:1;font-size:13px;font-weight:600;min-width:0}
+.lb-songs{font-size:11px;color:var(--text3);font-family:'Space Mono',monospace;flex-shrink:0}
+
+/* ── LIKED SONGS TAB ── */
+.liked-header{background:linear-gradient(135deg,rgba(255,94,143,.15),rgba(123,94,255,.08));border-radius:var(--radius);padding:24px;margin-bottom:20px;display:flex;align-items:center;gap:18px}
+.liked-icon{font-size:52px}
+.liked-count{font-size:32px;font-weight:800}
+.liked-sub{font-size:14px;color:var(--text2)}
+
+/* ── PLAYER BAR ── */
+.player-bar{height:76px;background:var(--bg2);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:18px;flex-shrink:0;position:relative;z-index:5}
+.player-bar::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(123,94,255,.04),transparent,rgba(200,255,0,.02));pointer-events:none}
+.player-song{display:flex;align-items:center;gap:11px;width:220px;flex-shrink:0}
+.player-thumb{width:44px;height:44px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;transition:transform .2s}
+.player-thumb:hover{transform:scale(1.05)}
+.player-song-info{flex:1;min-width:0}
+.player-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-artist{font-size:11px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-like{background:transparent;border:none;cursor:pointer;padding:4px;color:var(--text3);transition:all .15s;border-radius:5px;flex-shrink:0}
+.player-like:hover{color:var(--accent3)}
+.player-like.liked{color:var(--accent3)}
+.player-like svg{width:14px;height:14px}
+
+.player-center{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px}
+.player-controls{display:flex;align-items:center;gap:8px}
+.ctrl-btn{background:transparent;border:none;cursor:pointer;color:var(--text2);padding:6px;border-radius:7px;transition:all .15s;display:flex;align-items:center;justify-content:center;position:relative}
+.ctrl-btn:hover{color:var(--text);background:var(--bg3)}
+.ctrl-btn svg{width:15px;height:15px}
+.ctrl-btn.active{color:var(--accent)}
+.ctrl-btn.active::after{content:'';position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent)}
+.play-btn{width:36px;height:36px;background:var(--accent);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.play-btn:hover{transform:scale(1.08);box-shadow:0 4px 18px rgba(200,255,0,.4)}
+.play-btn svg{width:15px;height:15px;fill:#07090F}
+.play-btn.playing svg.play-icon{display:none}
+.play-btn:not(.playing) svg.pause-icon{display:none}
+
+.progress-area{width:100%;display:flex;align-items:center;gap:7px;max-width:480px}
+.progress-time{font-size:10px;color:var(--text3);font-family:'Space Mono',monospace;width:30px}
+.progress-time.right{text-align:right}
+.progress-slider{flex:1;height:3px;background:var(--bg4);border-radius:2px;cursor:pointer;position:relative;overflow:hidden;transition:height .15s}
+.progress-slider:hover{height:5px}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .5s linear}
+
+.player-right{display:flex;align-items:center;gap:6px;width:200px;justify-content:flex-end;flex-shrink:0}
+.player-wave{display:flex;align-items:center;gap:2px;height:18px}
+.player-wave-bar{width:2px;border-radius:1px;background:var(--accent);animation:player-wave .45s ease-in-out infinite alternate}
+@keyframes player-wave{0%{transform:scaleY(.2)}100%{transform:scaleY(1)}}
+.vol-wrap{display:flex;align-items:center;gap:6px}
+.vol-slider{width:72px;height:3px;background:var(--bg4);border-radius:2px;cursor:pointer;position:relative;overflow:hidden;transition:height .15s}
+.vol-slider:hover{height:5px}
+.vol-fill{height:100%;background:var(--text3);border-radius:2px;transition:width .1s}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:92px;right:22px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);padding:11px 16px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;transform:translateY(14px);opacity:0;transition:all .3s;z-index:400;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.toast-dot.error{background:var(--accent3)}
+.toast-dot.info{background:var(--accent4)}
+</style>
 </head>
 <body>
-    <div class="navbar" role="navigation" aria-label="Main navigation">
-        <div class="logo">Spudy News <span class="premium-badge">Premium</span></div>
-        <div class="nav-card">
-            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
-            <div class="nav-links" id="navLinks">
-                <a href="#" onclick="checkAuth(() => filterCategory('all'))" aria-label="Home">Home</a>
-                <a href="#" onclick="checkAuth(showSubscriptions)" aria-label="Subscriptions">Subscriptions</a>
-            </div>
-            <input type="text" placeholder="Search news..." id="searchBar" aria-label="Search news" style="border: none; border-radius: 50px; padding: 8px; background: var(--input-bg); color: var(--text-color);">
-            <select id="categoryFilter" aria-label="Filter by category" style="border: none; border-radius: 50px; padding: 8px; background: var(--input-bg); color: var(--text-color);">
-                <option value="all">All</option>
-                <option value="politics">Politics</option>
-                <option value="technology">Technology</option>
-                <option value="sports">Sports</option>
-                <option value="entertainment">Entertainment</option>
-            </select>
-            <button class="account-btn" id="accountBtn" aria-label="Account options"><i class="fas fa-user"></i> Account</button>
-            <div class="account-dropdown" id="accountDropdown">
-                <a href="#" id="loginLink" onclick="showModal('login')" aria-label="Login">Login</a>
-                <a href="#" id="signupLink" onclick="showModal('signup')" aria-label="Sign Up">Sign Up</a>
-            </div>
-            <div class="user-indicator" id="userIndicator" style="display: none;" aria-label="Logged in user">
-                <i class="fas fa-user"></i> Logged in as <span id="loggedInUsername"></span>
-            </div>
-            <button class="settings-btn" id="settingsBtn" style="display: none;" aria-label="Settings"><i class="fas fa-cog"></i> Settings</button>
-            <div class="settings-dropdown" id="settingsDropdown">
-                <a href="#" onclick="showModal('changePassword')" aria-label="Change Password">Change Password</a>
-                <a href="#" onclick="showModal('theme')" aria-label="Change Theme">Theme</a>
-                <a href="#" onclick="showAccountInfo()" aria-label="Account Info">Account Info</a>
-                <a href="#" onclick="logout()" aria-label="Logout">Logout</a>
-            </div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo" onclick="goHome()">
+    <div class="logo-icon">🎵</div>
+    <div class="logo-text">Spudy<span>AI</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-label">Create</div>
+      <div class="nav-item active" id="nav-create" onclick="switchTab('create')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Create Music
+      </div>
+      <div class="nav-item" id="nav-library" onclick="switchTab('library')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19V6l12-3v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="15" r="3"/></svg>
+        My Library
+        <span class="nav-plays" id="lib-count-badge">4</span>
+      </div>
+      <div class="nav-item" id="nav-explore" onclick="switchTab('explore')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Explore
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Discover</div>
+      <div class="nav-item" id="nav-charts" onclick="switchTab('charts')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        Charts
+        <span class="nav-badge">HOT</span>
+      </div>
+      <div class="nav-item" id="nav-community" onclick="switchTab('community')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Community
+      </div>
+      <div class="nav-item" id="nav-liked" onclick="switchTab('liked')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Liked Songs
+        <span class="nav-plays" id="liked-count-badge">0</span>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Recently Played</div>
+      <div class="nav-item" style="font-size:12px;opacity:.75" onclick="playSong('Neon Drift','Lo-fi Hip Hop','#1a1a2e','🌆','3:24')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/></svg>
+        Neon Drift
+        <span class="nav-plays">3:24</span>
+      </div>
+      <div class="nav-item" style="font-size:12px;opacity:.75" onclick="playSong('Ocean Memory','Ambient','#0d2137','🌊','4:12')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/></svg>
+        Ocean Memory
+        <span class="nav-plays">4:12</span>
+      </div>
+      <div class="nav-item" style="font-size:12px;opacity:.75" onclick="playSong('Wildfire','Synthwave','#2d1a0e','🔥','3:45')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/></svg>
+        Wildfire
+        <span class="nav-plays">3:45</span>
+      </div>
+    </div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="credits-bar" onclick="showModal('upgrade')">
+      <div class="credits-header">
+        <div class="credits-label">Monthly Credits</div>
+        <div style="font-size:10px;color:var(--accent2);font-weight:700">VIEW PLANS →</div>
+      </div>
+      <div class="credits-count">60 / 100 used</div>
+      <div class="credits-track"><div class="credits-fill" id="credits-fill-bar"></div></div>
+      <div class="credits-detail">40 credits remaining · resets in 12 days</div>
+    </div>
+    <button class="upgrade-btn" onclick="showModal('upgrade')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Upgrade to Pro
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title" id="topbar-title">Create</div>
+      <div class="topbar-sub" id="topbar-sub">AI Music Generator</div>
+    </div>
+    <div class="topbar-actions">
+      <div style="position:relative">
+        <button class="btn-ghost" id="model-btn" onclick="toggleDropdown('model-dropdown')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Spudy v2.1
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:10px;height:10px"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dropdown hidden" id="model-dropdown">
+          <div class="dropdown-header"><div class="dropdown-title">Select Model</div></div>
+          <div class="dropdown-item" onclick="selectModel('Spudy v2.1','Standard')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+            Spudy v2.1 <span style="margin-left:auto;font-size:10px;color:var(--text3)">Standard</span>
+          </div>
+          <div class="dropdown-item" onclick="selectModel('Spudy v3 Pro','Best Quality')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;color:var(--accent)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Spudy v3 Pro <span style="margin-left:auto;font-size:10px;color:var(--accent)">Best Quality</span>
+          </div>
+          <div class="dropdown-item" onclick="selectModel('Spudy Turbo','Fast')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;color:var(--accent4)"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Spudy Turbo <span style="margin-left:auto;font-size:10px;color:var(--accent4)">Fast</span>
+          </div>
+          <div class="dropdown-sep"></div>
+          <div class="dropdown-item" onclick="selectModel('Spudy Vocal','Vocals')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            Spudy Vocal <span style="margin-left:auto;font-size:10px;color:var(--text3)">Vocal Focus</span>
+          </div>
         </div>
-    </div>
-
-    <div class="hero" id="hero">
-        <div id="particles-js"></div>
-        <div class="hero-content">
-            <h1>Welcome to Spudy News Premium</h1>
-            <div class="typing">Your Exclusive News Source</div>
-            <a href="#content" class="cta-button" onclick="checkAuth(() => scrollToContent())" aria-label="Discover news">Discover Now</a>
-        </div>
-    </div>
-
-    <div class="container" id="content">
-        <div class="gallery" id="gallery"></div>
-    </div>
-
-    <div class="news-section" id="newsSection" role="dialog" aria-modal="true" aria-label="News article viewer">
-        <span class="close-news" onclick="closeNews()" tabindex="0" aria-label="Close news viewer">×</span>
-        <div class="news-viewer" id="newsViewer">
-            <div class="comments-section" id="commentsSection"></div>
-        </div>
-    </div>
-
-    <div class="modal" id="loginModal" role="dialog" aria-modal="true" aria-label="Login modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('login')" tabindex="0" aria-label="Close login modal">×</span>
-            <h2>Login to Spudy News Premium</h2>
-            <div class="form-card">
-                <div class="input-group">
-                    <input type="text" id="loginUsername" placeholder="Username" oninput="validateInput(this)" aria-label="Username">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="loginPassword" placeholder="Password" oninput="validateInput(this)" aria-label="Password">
-                    <i class="fas fa-lock"></i>
-                </div>
-                <button onclick="login()" aria-label="Login">Login</button>
-                <div class="login-notice" id="loginNotice">New users must register first.</div>
+      </div>
+      <div style="position:relative">
+        <button class="btn-accent" onclick="showModal('share')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share
+        </button>
+      </div>
+      <div style="position:relative">
+        <div class="user-avatar" id="user-avatar-btn" onclick="toggleDropdown('user-dropdown')">U</div>
+        <div class="dropdown hidden" id="user-dropdown" style="min-width:200px">
+          <div class="dropdown-header">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7B5EFF,#C8FF00);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#07090F;flex-shrink:0">U</div>
+              <div><div style="font-size:13px;font-weight:700;color:var(--text)">User</div><div style="font-size:11px;color:var(--text3)">Free Plan · 60 credits</div></div>
             </div>
-            <a href="#" class="switch-btn" onclick="switchModal('signup')" aria-label="Switch to register">Switch to Register</a>
-            <div class="error" id="loginError"></div>
+          </div>
+          <div class="dropdown-item" onclick="closeDropdowns();showToast('Profile coming soon','info')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Profile
+          </div>
+          <div class="dropdown-item" onclick="closeDropdowns();showToast('Settings coming soon','info')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+          </div>
+          <div class="dropdown-item" onclick="closeDropdowns();showModal('upgrade')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Upgrade Plan
+          </div>
+          <div class="dropdown-sep"></div>
+          <div class="dropdown-item danger" onclick="closeDropdowns();showToast('Logged out','error')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </div>
         </div>
+      </div>
     </div>
-    <div class="modal" id="signupModal" role="dialog" aria-modal="true" aria-label="Sign up modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('signup')" tabindex="0" aria-label="Close sign up modal">×</span>
-            <h2>Join Spudy News Premium</h2>
-            <div class="form-card">
-                <div class="input-group">
-                    <input type="text" id="signupUsername" placeholder="Username" oninput="validateInput(this)" aria-label="Username">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="input-group">
-                    <input type="email" id="signupEmail" placeholder="Email" oninput="validateInput(this)" aria-label="Email">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="signupPassword" placeholder="Password" oninput="validateInput(this)" aria-label="Password">
-                    <i class="fas fa-lock"></i>
-                    <button class="generate-password" onclick="generatePassword()" aria-label="Generate password">Generate</button>
-                </div>
-                <div class="password-suggestion" id="passwordSuggestion"></div>
-                <button onclick="signup()" aria-label="Sign up">Sign Up</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" onclick="closeDropdowns()">
+
+    <!-- ── CREATE TAB ── -->
+    <div id="tab-create" class="tab-content active">
+      <div class="generating-panel" id="gen-panel">
+        <div class="gen-header">
+          <div class="gen-spinner"></div>
+          <div style="flex:1;min-width:0">
+            <div class="gen-title">Generating your tracks...</div>
+            <div class="gen-prompt-text" id="gen-prompt-label"></div>
+          </div>
+          <div class="gen-status" id="gen-eta">ETA ~30s</div>
+        </div>
+        <div class="gen-tracks">
+          <div class="gen-track">
+            <div class="gen-track-header"><span class="gen-track-label">TRACK A</span><span class="gen-pct" id="gen-pct-1">0%</span></div>
+            <div class="gen-progress-track"><div class="gen-progress-fill" id="gen-fill-1" style="width:0%"></div></div>
+            <div class="gen-waveform" id="gen-wave-1"></div>
+          </div>
+          <div class="gen-track">
+            <div class="gen-track-header"><span class="gen-track-label">TRACK B</span><span class="gen-pct" id="gen-pct-2">0%</span></div>
+            <div class="gen-progress-track"><div class="gen-progress-fill" id="gen-fill-2" style="width:0%"></div></div>
+            <div class="gen-waveform" id="gen-wave-2"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Song detail view -->
+      <div class="song-detail" id="song-detail">
+        <div class="song-detail-top">
+          <div class="song-detail-art" id="detail-art" style="background:#1a1a2e">🌆</div>
+          <div class="song-detail-info">
+            <div class="song-detail-name" id="detail-name">Neon Drift</div>
+            <div class="song-detail-genre" id="detail-genre">Lo-fi Hip Hop</div>
+            <div class="song-detail-stats">
+              <div class="song-detail-stat"><strong id="detail-plays">12.4k</strong>plays</div>
+              <div class="song-detail-stat"><strong id="detail-duration">3:24</strong>length</div>
+              <div class="song-detail-stat"><strong>AI</strong>generated</div>
             </div>
-            <a href="#" class="switch-btn" onclick="switchModal('login')" aria-label="Switch to login">Switch to Login</a>
-            <div class="error" id="signupError"></div>
-        </div>
-    </div>
-    <div class="modal" id="changePasswordModal" role="dialog" aria-modal="true" aria-label="Change password modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('changePassword')" tabindex="0" aria-label="Close change password modal">×</span>
-            <h2>Change Password</h2>
-            <div class="form-card">
-                <div class="input-group">
-                    <input type="password" id="currentPassword" placeholder="Current Password" oninput="validateInput(this)" aria-label="Current password">
-                    <i class="fas fa-lock"></i>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="newPassword" placeholder="New Password" oninput="validateInput(this)" aria-label="New password">
-                    <i class="fas fa-lock"></i>
-                </div>
-                <button onclick="changePassword()" aria-label="Update password">Update Password</button>
+            <div class="song-detail-actions">
+              <button class="btn-accent" style="font-size:12px;padding:7px 14px" onclick="togglePlay()">
+                <svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:#07090F"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Play
+              </button>
+              <button class="btn-ghost" style="font-size:12px;padding:7px 12px" onclick="showModal('share')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                Share
+              </button>
+              <button class="btn-ghost" style="font-size:12px;padding:7px 12px" onclick="downloadSong()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download
+              </button>
+              <button class="btn-ghost" style="font-size:12px;padding:7px 12px" onclick="closeSongDetail()">✕ Close</button>
             </div>
-            <div class="error" id="changePasswordError"></div>
+          </div>
         </div>
-    </div>
-    <div class="modal" id="themeModal" role="dialog" aria-modal="true" aria-label="Theme selection modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('theme')" tabindex="0" aria-label="Close theme modal">×</span>
-            <h2>Choose Theme</h2>
-            <div class="form-card">
-                <button onclick="setTheme('dark')" aria-label="Select dark theme">Dark Theme</button>
-                <button onclick="setTheme('light')" aria-label="Select light theme">Light Theme</button>
+        <div class="song-detail-waveform" id="detail-waveform" onclick="seekDetailWaveform(event)"></div>
+        <div class="song-detail-tags" id="detail-tags"></div>
+      </div>
+
+      <div class="create-panel">
+        <div class="create-header">
+          <div class="create-title">What kind of song?</div>
+          <span class="badge badge-new">AI POWERED</span>
+          <span class="badge badge-beta" style="margin-left:2px">BETA</span>
+        </div>
+        <div class="mode-tabs">
+          <button class="mode-tab active" id="mode-simple" onclick="setMode('simple',this)">Simple</button>
+          <button class="mode-tab" id="mode-lyrics" onclick="setMode('lyrics',this)">Custom Lyrics</button>
+          <button class="mode-tab" id="mode-instrumental" onclick="setMode('instrumental',this)">Instrumental</button>
+          <button class="mode-tab" id="mode-extend" onclick="setMode('extend',this)">Extend</button>
+        </div>
+        <div class="suggested-prompts" id="suggested-prompts">
+          <div class="prompt-chip" onclick="usePrompt(this,'cinematic lo-fi for late night coding')">🌃 Late Night Lo-fi</div>
+          <div class="prompt-chip" onclick="usePrompt(this,'indie rock anthem about freedom and open roads')">🎸 Indie Rock Anthem</div>
+          <div class="prompt-chip" onclick="usePrompt(this,'chill beach house summer vibes with ukulele')">🌊 Beach House Chill</div>
+          <div class="prompt-chip" onclick="usePrompt(this,'emotional piano ballad about loss and hope')">💜 Emotional Ballad</div>
+          <div class="prompt-chip" onclick="usePrompt(this,'high energy trap banger with 808s')">⚡ Trap Banger</div>
+          <div class="prompt-chip" onclick="usePrompt(this,'jazz-hop coffee shop study beats')">☕ Jazz Hop</div>
+        </div>
+        <div id="lyrics-area" style="display:none;margin-bottom:14px">
+          <textarea class="prompt-textarea" style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;height:100px" placeholder="Enter your lyrics here...&#10;&#10;[Verse 1]&#10;...&#10;[Chorus]&#10;..."></textarea>
+        </div>
+        <div id="extend-area" style="display:none;margin-bottom:14px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px">
+          <div style="font-size:12px;color:var(--text3);margin-bottom:8px">Select a track to extend:</div>
+          <div id="extend-track-list" style="display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+        <div class="prompt-area" id="main-prompt-area">
+          <textarea class="prompt-textarea" id="prompt-input" placeholder="Describe your song... (e.g. 'upbeat lo-fi hip hop with rain sounds, melancholic piano, jazzy bass lines, 90 BPM')" maxlength="400"></textarea>
+          <div class="prompt-controls">
+            <div class="prompt-tags">
+              <div class="tag" id="tag-lofi" onclick="addTag(this,'lo-fi')">lo-fi</div>
+              <div class="tag" id="tag-energetic" onclick="addTag(this,'energetic')">energetic</div>
+              <div class="tag" id="tag-melancholic" onclick="addTag(this,'melancholic')">melancholic</div>
+              <div class="tag" id="tag-acoustic" onclick="addTag(this,'acoustic')">acoustic</div>
+              <div class="tag" id="tag-electronic" onclick="addTag(this,'electronic')">electronic</div>
+              <div class="tag" id="tag-cinematic" onclick="addTag(this,'cinematic')">cinematic</div>
+              <div class="tag" onclick="addTag(this,'ambient')">ambient</div>
+              <div class="tag" onclick="addTag(this,'dark')">dark</div>
             </div>
+            <div class="char-count" id="char-count">0 / 400</div>
+          </div>
         </div>
-    </div>
-    <div class="modal" id="accountInfoModal" role="dialog" aria-modal="true" aria-label="Account information modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('accountInfo')" tabindex="0" aria-label="Close account info modal">×</span>
-            <h2>Account Information</h2>
-            <div class="form-card">
-                <p><strong>Username:</strong> <span id="accountUsername"></span></p>
-                <p><strong>Email:</strong> <span id="accountEmail"></span></p>
+        <div class="create-options">
+          <div class="option-toggle" id="opt-lyrics" onclick="toggleOption(this)"><div class="toggle-dot"></div>With Lyrics</div>
+          <div class="option-toggle active" id="opt-two" onclick="toggleOption(this)"><div class="toggle-dot"></div>Two Versions</div>
+          <div class="option-toggle" id="opt-title" onclick="toggleOption(this)"><div class="toggle-dot"></div>Auto Title</div>
+          <div class="option-toggle" id="opt-hd" onclick="toggleOption(this)"><div class="toggle-dot"></div>HD Quality</div>
+        </div>
+        <div class="create-bottom">
+          <div class="style-inputs">
+            <div class="style-input-wrap">
+              <input class="style-input" id="style-input" placeholder="Style (e.g. jazz, hip hop...)" readonly onclick="toggleDropdown('style-dropdown')" value="">
+              <div class="dropdown hidden style-dropdown" id="style-dropdown" style="position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:20">
+                <div id="style-opts"></div>
+              </div>
             </div>
+            <input class="style-input" id="title-input" placeholder="Song title (optional)">
+          </div>
+          <button class="generate-btn" id="gen-btn" onclick="generateSong()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Create
+          </button>
         </div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">✨ Explore Moods</div>
+      </div>
+      <div class="featured-grid">
+        <div class="featured-card" style="background:linear-gradient(135deg,#0f0c29,#302b63,#24243e)" onclick="usePromptAndScroll('dreamy synthwave with cosmic atmosphere, pulsing arpeggios and ethereal pads')">
+          <div class="fc-emoji">🌌</div>
+          <div class="fc-use-btn">Use This Mood</div>
+          <div class="fc-title">Cosmic Dreams</div>
+          <div class="fc-sub">Synthwave · Atmospheric</div>
+        </div>
+        <div class="featured-card" style="background:linear-gradient(135deg,#1a3a1a,#2d5a1a,#1a3a1a)" onclick="usePromptAndScroll('organic forest ambient with nature sounds, gentle acoustic guitar, peaceful')">
+          <div class="fc-emoji">🌿</div>
+          <div class="fc-use-btn">Use This Mood</div>
+          <div class="fc-title">Forest Calm</div>
+          <div class="fc-sub">Ambient · Nature</div>
+        </div>
+        <div class="featured-card" style="background:linear-gradient(135deg,#3d0000,#7a1a00,#3d0000)" onclick="usePromptAndScroll('aggressive dark trap with heavy 808s, distorted synths and menacing atmosphere')">
+          <div class="fc-emoji">🔥</div>
+          <div class="fc-use-btn">Use This Mood</div>
+          <div class="fc-title">Dark Energy</div>
+          <div class="fc-sub">Trap · Dark</div>
+        </div>
+        <div class="featured-card" style="background:linear-gradient(135deg,#0d1a3a,#0d3a5a,#0d1a3a)" onclick="usePromptAndScroll('deep ocean ambient with underwater sounds, reverberant piano and gentle waves')">
+          <div class="fc-emoji">🌊</div>
+          <div class="fc-use-btn">Use This Mood</div>
+          <div class="fc-title">Ocean Depths</div>
+          <div class="fc-sub">Ambient · Ethereal</div>
+        </div>
+        <div class="featured-card" style="background:linear-gradient(135deg,#2d1a3d,#4d2a5d,#2d1a3d)" onclick="usePromptAndScroll('jazzy hip hop with sampled vinyl crackle, mellow brass and smooth drums')">
+          <div class="fc-emoji">🎺</div>
+          <div class="fc-use-btn">Use This Mood</div>
+          <div class="fc-title">Jazz Nights</div>
+          <div class="fc-sub">Jazz-Hop · Mellow</div>
+        </div>
+        <div class="featured-card" style="background:linear-gradient(135deg,#1a0d00,#3a2200,#1a0d00)" onclick="usePromptAndScroll('epic cinematic orchestral with soaring strings, choir and powerful percussion')">
+          <div class="fc-emoji">🎻</div>
+          <div class="fc-use-btn">Use This Mood</div>
+          <div class="fc-title">Epic Score</div>
+          <div class="fc-sub">Cinematic · Orchestral</div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">🎵 Your Recent Creations</div>
+        <div class="section-actions">
+          <div class="sort-btn" onclick="sortSongs()">Sort by date ↕</div>
+          <div class="see-all" onclick="switchTab('library')">View all in Library →</div>
+        </div>
+      </div>
+      <div class="songs-grid" id="recent-grid"></div>
+
+      <div class="section-header">
+        <div class="section-title">🔥 Trending Now</div>
+        <div class="see-all" onclick="switchTab('charts')">See full charts →</div>
+      </div>
+      <div class="trending-list" id="trending-list"></div>
     </div>
 
-    <script>
-        let db;
-        const request = indexedDB.open('SpudyNewsDB', 2);
+    <!-- ── LIBRARY TAB ── -->
+    <div id="tab-library" class="tab-content">
+      <div class="library-filters">
+        <div class="filter-btn active" onclick="filterLibrary('all',this)">All Songs</div>
+        <div class="filter-btn" onclick="filterLibrary('recent',this)">Recent</div>
+        <div class="filter-btn" onclick="filterLibrary('liked',this)">Liked</div>
+        <div class="filter-btn" onclick="filterLibrary('instrumental',this)">Instrumental</div>
+        <div class="filter-btn" onclick="filterLibrary('vocal',this)">Vocal</div>
+      </div>
+      <table class="library-table" id="library-table">
+        <thead>
+          <tr>
+            <th style="width:32px">#</th>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Plays</th>
+            <th>Duration</th>
+            <th style="width:80px"></th>
+          </tr>
+        </thead>
+        <tbody id="library-body"></tbody>
+      </table>
+      <div style="text-align:center;padding:20px 0 10px">
+        <button class="btn-ghost" onclick="switchTab('create')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create More Music
+        </button>
+      </div>
+    </div>
 
-        request.onupgradeneeded = function(event) {
-            db = event.target.result;
-            if (!db.objectStoreNames.contains('news')) {
-                db.createObjectStore('news', { keyPath: 'id', autoIncrement: true });
-            }
-            if (!db.objectStoreNames.contains('users')) {
-                db.createObjectStore('users', { keyPath: 'username' });
-            }
-            if (!db.objectStoreNames.contains('comments')) {
-                db.createObjectStore('comments', { keyPath: 'id', autoIncrement: true });
-            }
-            if (!db.objectStoreNames.contains('likes')) {
-                db.createObjectStore('likes', { keyPath: 'id', autoIncrement: true });
-            }
-            if (!db.objectStoreNames.contains('subscriptions')) {
-                db.createObjectStore('subscriptions', { keyPath: 'id', autoIncrement: true });
-            }
-        };
+    <!-- ── EXPLORE TAB ── -->
+    <div id="tab-explore" class="tab-content">
+      <div class="section-header" style="margin-bottom:18px">
+        <div class="section-title">Browse Genres</div>
+      </div>
+      <div class="genre-grid" id="genre-grid"></div>
+      <div class="section-header">
+        <div class="section-title">🆕 New Releases</div>
+        <div class="see-all" onclick="showToast('Loading new releases...','info')">See all</div>
+      </div>
+      <div class="songs-grid" id="explore-new-grid"></div>
+    </div>
 
-        request.onsuccess = function(event) {
-            db = event.target.result;
-            preloadNews();
-            checkCurrentUser();
-            loadTheme();
-        };
+    <!-- ── CHARTS TAB ── -->
+    <div id="tab-charts" class="tab-content">
+      <div class="chart-period-tabs">
+        <button class="chart-period-tab active" onclick="setChartPeriod('today',this)">Today</button>
+        <button class="chart-period-tab" onclick="setChartPeriod('week',this)">This Week</button>
+        <button class="chart-period-tab" onclick="setChartPeriod('month',this)">This Month</button>
+        <button class="chart-period-tab" onclick="setChartPeriod('all',this)">All Time</button>
+      </div>
+      <table class="chart-table" id="chart-table">
+        <thead>
+          <tr>
+            <th style="width:44px">#</th>
+            <th>Track</th>
+            <th style="width:120px">Popularity</th>
+            <th style="width:60px">Plays</th>
+            <th style="width:50px">Len</th>
+            <th style="width:36px"></th>
+          </tr>
+        </thead>
+        <tbody id="chart-body"></tbody>
+      </table>
+    </div>
 
-        request.onerror = function(event) {
-            console.error('IndexedDB error:', event.target.errorCode);
-            alert('Failed to initialize database. Please try again.');
-        };
+    <!-- ── COMMUNITY TAB ── -->
+    <div id="tab-community" class="tab-content">
+      <div class="community-grid">
+        <div class="community-feed" id="community-feed"></div>
+        <div class="leaderboard">
+          <div class="leaderboard-title">🏆 Top Creators</div>
+          <div id="leaderboard-list"></div>
+        </div>
+      </div>
+    </div>
 
-        function preloadNews() {
-            const transaction = db.transaction(['news'], 'readwrite');
-            const store = transaction.objectStore('news');
-            const request = store.getAll();
-            request.onsuccess = function(event) {
-                const existingNews = event.target.result;
-                const newsArticles = [
-                    {
-                        title: '🎤 BREAKING MUSIC NEWS: A SONG THAT WILL STIR YOUR SOUL!',
-                        content: `🔥 EXCLUSIVE from Spudy TV 🔥
+    <!-- ── LIKED SONGS TAB ── -->
+    <div id="tab-liked" class="tab-content">
+      <div class="liked-header">
+        <div class="liked-icon">❤️</div>
+        <div>
+          <div class="liked-count" id="liked-songs-count">0 songs</div>
+          <div class="liked-sub">Songs you've hearted</div>
+          <div style="margin-top:10px">
+            <button class="btn-accent" style="font-size:12px;padding:8px 18px" onclick="playAllLiked()">
+              <svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:#07090F"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Play All
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="liked-songs-list"></div>
+      <div id="liked-empty" style="text-align:center;padding:40px;color:var(--text3);display:none">
+        <div style="font-size:36px;margin-bottom:12px">🤍</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text2);margin-bottom:6px">No liked songs yet</div>
+        <div style="font-size:13px">Heart songs in the trending list to save them here</div>
+      </div>
+    </div>
 
-🎵 ARTIST: Spudy
-🎶 SONG TITLE: Mai Vangu
-📆 RELEASE DATE: Next week, Monday
-🎥 OFFICIAL MUSIC VIDEO: Drops SAME DAY
+  </div>
 
-You’ve heard music… but you haven’t felt music like this before.
-Spudy is back — not just with a song, but with a deeply personal anthem that will move your heart and stay with you long after it ends.
+  <!-- PLAYER BAR -->
+  <div class="player-bar">
+    <div class="player-song">
+      <div class="player-thumb" id="player-thumb" style="background:#1a1a2e">🌆</div>
+      <div class="player-song-info" style="flex:1;min-width:0">
+        <div class="player-name" id="player-name">Neon Drift</div>
+        <div class="player-artist" id="player-artist">Lo-fi Hip Hop · AI Generated</div>
+      </div>
+      <button class="player-like" id="player-like-btn" onclick="togglePlayerLike()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
+    </div>
+    <div class="player-center">
+      <div class="player-controls">
+        <button class="ctrl-btn" id="shuffle-btn" title="Shuffle" onclick="toggleShuffle()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        </button>
+        <button class="ctrl-btn" title="Previous" onclick="prevSong()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+        </button>
+        <button class="play-btn" id="main-play-btn" onclick="togglePlay()">
+          <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </button>
+        <button class="ctrl-btn" title="Next" onclick="nextSong()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+        </button>
+        <button class="ctrl-btn" id="repeat-btn" title="Repeat" onclick="cycleRepeat()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        </button>
+      </div>
+      <div class="progress-area">
+        <span class="progress-time" id="curr-time">0:00</span>
+        <div class="progress-slider" onclick="seekProgress(event)" id="progress-slider">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+        <span class="progress-time right" id="total-time">3:24</span>
+      </div>
+    </div>
+    <div class="player-right">
+      <div class="player-wave" id="player-wave" style="display:none">
+        <div class="player-wave-bar" style="height:60%;animation-delay:0s"></div>
+        <div class="player-wave-bar" style="height:100%;animation-delay:.1s"></div>
+        <div class="player-wave-bar" style="height:40%;animation-delay:.18s"></div>
+        <div class="player-wave-bar" style="height:80%;animation-delay:.12s"></div>
+        <div class="player-wave-bar" style="height:55%;animation-delay:.06s"></div>
+      </div>
+      <button class="ctrl-btn" title="Download" onclick="downloadSong()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+      <button class="ctrl-btn" title="Share" onclick="showModal('share')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
+      <div class="vol-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;color:var(--text3);flex-shrink:0" onclick="toggleMute()"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14" id="vol-max"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" id="vol-mid"/></svg>
+        <div class="vol-slider" onclick="setVolume(event)" id="vol-slider"><div class="vol-fill" id="vol-fill" style="width:75%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-🌺 Mai Vangu is not just a melody — it’s a story. A tribute. A celebration of love, sacrifice, and strength. Inspired by the unshakable spirit of a mother, this song reaches into the most sacred places of our lives — the people who raised us, believed in us, and stood by us through everything.
+<!-- CONTEXT MENU -->
+<div class="ctx-menu hidden" id="ctx-menu">
+  <div class="ctx-item" onclick="ctxAction('play')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>Play now</div>
+  <div class="ctx-item" onclick="ctxAction('next')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4 15 12 5 20"/><line x1="19" y1="5" x2="19" y2="19"/></svg>Play next</div>
+  <div class="ctx-item" onclick="ctxAction('queue')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Add to queue</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="ctxAction('like')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Like</div>
+  <div class="ctx-item" onclick="ctxAction('share')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share</div>
+  <div class="ctx-item" onclick="ctxAction('download')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="ctxAction('detail')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>View details</div>
+  <div class="ctx-item danger" onclick="ctxAction('delete')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>Delete track</div>
+</div>
 
-💔 Have you ever wanted to say thank you but didn’t know how?
-🌍 Have you ever longed to give your mother her flowers while she can still smell them?
+<!-- MODALS -->
+<div class="modal-overlay hidden" id="modal-overlay" onclick="closeModal(event)">
+  <!-- UPGRADE MODAL -->
+  <div class="modal" id="modal-upgrade" style="display:none">
+    <div class="modal-header">
+      <div class="modal-title">⚡ Upgrade to Pro</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:13px;color:var(--text2);margin-bottom:18px">Unlock unlimited music creation and premium features.</div>
+      <div class="pricing-grid">
+        <div class="plan-card" onclick="selectPlan('Starter')">
+          <div class="plan-name">Starter</div>
+          <div class="plan-price">$8<span>/mo</span></div>
+          <ul class="plan-features">
+            <li>200 credits/mo</li>
+            <li>HD quality</li>
+            <li>Downloads</li>
+          </ul>
+        </div>
+        <div class="plan-card popular" onclick="selectPlan('Pro')">
+          <div class="popular-label">MOST POPULAR</div>
+          <div class="plan-name">Pro</div>
+          <div class="plan-price">$18<span>/mo</span></div>
+          <ul class="plan-features">
+            <li>Unlimited credits</li>
+            <li>All models</li>
+            <li>Priority queue</li>
+          </ul>
+        </div>
+        <div class="plan-card" onclick="selectPlan('Studio')">
+          <div class="plan-name">Studio</div>
+          <div class="plan-price">$48<span>/mo</span></div>
+          <ul class="plan-features">
+            <li>Team access</li>
+            <li>Commercial license</li>
+            <li>API access</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal()">Maybe later</button>
+      <button class="btn-accent" onclick="selectPlan('Pro')">Get Pro — $18/mo</button>
+    </div>
+  </div>
 
-This is your song. This is our story.
+  <!-- SHARE MODAL -->
+  <div class="modal" id="modal-share" style="display:none">
+    <div class="modal-header">
+      <div class="modal-title">Share Track</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--bg3);border-radius:var(--r-sm);padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:16px;border:1px solid var(--border)">
+        <div id="share-art" style="width:48px;height:48px;border-radius:8px;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🌆</div>
+        <div>
+          <div style="font-size:14px;font-weight:700" id="share-name">Neon Drift</div>
+          <div style="font-size:12px;color:var(--text3)" id="share-genre">Lo-fi Hip Hop</div>
+        </div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <span style="font-size:12px;color:var(--text2);font-family:'Space Mono',monospace">spudy.ai/track/</span><span style="font-size:12px;color:var(--text3);font-family:'Space Mono',monospace" id="share-id">nd7x2k</span>
+        <button class="btn-ghost" style="font-size:11px;padding:4px 10px" onclick="copyLink()">Copy Link</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-ghost" onclick="shareVia('Twitter')">🐦 Twitter</button>
+        <button class="btn-ghost" onclick="shareVia('Instagram')">📸 Instagram</button>
+        <button class="btn-ghost" onclick="shareVia('SoundCloud')">☁️ SoundCloud</button>
+        <button class="btn-ghost" onclick="shareVia('Embed')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Embed
+        </button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal()">Close</button>
+      <button class="btn-accent" onclick="downloadSong()">Download MP3</button>
+    </div>
+  </div>
+</div>
 
-From the very first note of Mai Vangu, you’ll feel it — the warmth of home, the ache of memories, the pride in our roots. Spudy delivers vocals that cut deep, lyrics that speak loud, and emotion that can’t be faked.
+<!-- TOAST -->
+<div class="toast" id="toast"><div class="toast-dot" id="toast-dot"></div><span id="toast-msg">Done!</span></div>
 
-And just when you think it couldn’t hit harder — 🎬 the official music video drops alongside the track, bringing the song’s message to life in stunning visuals that will leave you breathless.
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────
+const songs = [
+  {id:1,name:'Neon Drift',genre:'Lo-fi Hip Hop',bg:'#1a1a2e',emoji:'🌆',duration:'3:24',plays:'12.4k',tags:['lo-fi','chill','beats']},
+  {id:2,name:'Ocean Memory',genre:'Ambient',bg:'#0d2137',emoji:'🌊',duration:'4:12',plays:'8.1k',tags:['ambient','peaceful','waves']},
+  {id:3,name:'Wildfire',genre:'Synthwave',bg:'#2d1a0e',emoji:'🔥',duration:'3:45',plays:'21.7k',tags:['synthwave','energetic','retro']},
+  {id:4,name:'Midnight Code',genre:'Chillhop',bg:'#0e1a2d',emoji:'💻',duration:'2:58',plays:'6.3k',tags:['chillhop','focused','beats']},
+];
 
-🚨 Set your alarms. Tell your friends. Prepare your heart.
-Because this Monday, a cultural moment is coming.
+const trending = [
+  {name:'Stellar Collapse',genre:'Dark Ambient · Electronic',plays:'142k',duration:'5:18',emoji:'⭐',bg:'#1a1a1a',change:'up'},
+  {name:'Cherry Blossom Rain',genre:'J-Pop · Acoustic',plays:'98k',duration:'3:42',emoji:'🌸',bg:'#2d1a2d',change:'same'},
+  {name:'Desert Protocol',genre:'Industrial · Techno',plays:'87k',duration:'6:01',emoji:'🏜️',bg:'#1a1500',change:'up'},
+  {name:'Glass Heart',genre:'Indie Pop · Emotional',plays:'76k',duration:'3:55',emoji:'💙',bg:'#0d1a2d',change:'down'},
+  {name:'Monsoon Season',genre:'World · Cinematic',plays:'64k',duration:'4:28',emoji:'🌧️',bg:'#0d1a0d',change:'up'},
+  {name:'Vapor Trail',genre:'Vaporwave · Lo-fi',plays:'58k',duration:'3:10',emoji:'🌸',bg:'#1a0d2d',change:'up'},
+  {name:'Iron Crown',genre:'Metal · Electronic',plays:'49k',duration:'4:55',emoji:'👑',bg:'#1a1a0d',change:'down'},
+];
 
-👉 Follow Spudy TV for countdowns, sneak peeks, and exclusive behind-the-scenes content.
+const genres = [
+  {name:'Lo-fi Hip Hop',emoji:'🎧',count:'2.4k tracks',color:'#1a1a2e',prompt:'cozy lo-fi hip hop with vinyl crackle and mellow piano'},
+  {name:'Synthwave',emoji:'🌆',count:'1.8k tracks',color:'#2d0a3a',prompt:'80s synthwave with driving arpeggios and neon atmosphere'},
+  {name:'Ambient',emoji:'🌿',count:'3.1k tracks',color:'#0a2a1a',prompt:'peaceful ambient with nature sounds and gentle drones'},
+  {name:'Hip Hop',emoji:'🎤',count:'4.2k tracks',color:'#1a0d0a',prompt:'modern hip hop with hard hitting 808s and trap beats'},
+  {name:'Electronic',emoji:'⚡',count:'5.6k tracks',color:'#0a1a2d',prompt:'energetic electronic dance music with big drops'},
+  {name:'Jazz',emoji:'🎺',count:'1.2k tracks',color:'#1a1200',prompt:'smooth jazz with saxophone, piano and light percussion'},
+  {name:'Cinematic',emoji:'🎬',count:'2.8k tracks',color:'#1a0a00',prompt:'epic cinematic orchestral score with strings and choir'},
+  {name:'Indie Pop',emoji:'🎸',count:'3.4k tracks',color:'#0a1a0a',prompt:'catchy indie pop with jangly guitars and dreamy vocals'},
+  {name:'R&B',emoji:'🎵',count:'2.0k tracks',color:'#1a0a1a',prompt:'smooth R&B with soulful vocals and groovy bassline'},
+];
 
-🎧 Mai Vangu isn’t just another release —
-It’s the sound of gratitude.
-It’s the voice of our mothers.
-It’s the anthem we didn’t know we needed… until now.`,
-                        category: 'entertainment',
-                        author: 'Spudy TV',
-                        date: new Date().toISOString()
-                    },
-                    {
-                        title: '🚨 BREAKING NEWS! 🚨 Spudy TV is LIVE with Mai Vangu Drop!',
-                        content: `🚨 BREAKING NEWS! 🚨
+const styleOptions = [
+  {name:'Lo-fi',dot:'#7B5EFF'},{name:'Synthwave',dot:'#FF5E8F'},{name:'Ambient',dot:'#00E5FF'},
+  {name:'Hip Hop',dot:'#C8FF00'},{name:'Electronic',dot:'#FFE500'},{name:'Jazz',dot:'#FF9500'},
+  {name:'Rock',dot:'#FF3B3B'},{name:'Cinematic',dot:'#B05EFF'},{name:'Classical',dot:'#FFFFFF'},
+  {name:'R&B',dot:'#FF5E8F'},{name:'Pop',dot:'#00FFC8'},{name:'Folk',dot:'#AAD97D'},
+];
 
-📡 Spudy TV is now LIVE!
-Just search “Spudy TV” on the web — we’re officially streaming! 🔥
+const communityPosts = [
+  {user:'StarlightBeats',avatar:'🎧',color:'#7B5EFF',time:'2h ago',song:{name:'Aurora Drive',genre:'Synthwave',emoji:'🌌',bg:'#1a0d2d'},caption:'Just dropped this late-night drive vibe. Spudy really nailed that 80s atmosphere!',likes:142,comments:18,plays:890},
+  {user:'NeonMelody',avatar:'🎹',color:'#00E5FF',time:'5h ago',song:{name:'Rain Garden',genre:'Ambient Lo-fi',emoji:'🌧️',bg:'#0d1a0d'},caption:'Perfect study session background. Generated in 30 seconds and it\'s better than anything I\'ve made manually.',likes:87,comments:9,plays:412},
+  {user:'BeatForgeX',avatar:'🥁',color:'#FF5E8F',time:'1d ago',song:{name:'Iron Phoenix',genre:'Trap · Dark',emoji:'🔥',bg:'#2d0a0a'},caption:'Dark trap mode activated. This is fire 🔥',likes:203,comments:31,plays:2140},
+];
 
-Your go-to source for music, culture, and exclusive content is here. Tune in now to catch the latest updates, live performances, and behind-the-scenes action. Search "Spudy TV" on your favorite browser and join the movement!
+const leaderboard = [
+  {name:'StarlightBeats',avatar:'🎧',color:'#7B5EFF',songs:47},
+  {name:'NeonMelody',avatar:'🎹',color:'#00E5FF',songs:38},
+  {name:'BeatForgeX',avatar:'🥁',color:'#FF5E8F',songs:29},
+  {name:'CloudKraft',avatar:'☁️',color:'#C8FF00',songs:24},
+  {name:'BassDrop404',avatar:'🎸',color:'#FF9500',songs:18},
+];
 
-But that’s not all...
+// ── STATE ──────────────────────────────────────────────────────────────
+let isPlaying = false;
+let currentSong = null;
+let currentSongData = null;
+let progressInterval = null;
+let progressVal = 0;
+let totalSeconds = 204;
+let currentSeconds = 0;
+let shuffleOn = false;
+let repeatMode = 0; // 0=off,1=all,2=one
+let volume = 75;
+let muted = false;
+let likedSongs = new Set();
+let likedTrending = new Set();
+let currentCtxSong = null;
+let currentMode = 'simple';
+let sortDesc = true;
+let chartPeriod = 'today';
 
-🎤 BIGGEST MUSIC DROP OF THE SEASON COMING THIS MONDAY!
-🎶 Spudy — “Mai Vangu” (Official Song + Music Video)
+// ── INIT ──────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildStyleDropdown();
+  renderRecent();
+  renderTrending();
+  renderLibrary();
+  renderExplore();
+  renderCharts();
+  renderCommunity();
+  setupVolumeSlider();
+  document.getElementById('prompt-input').addEventListener('input', updateCharCount);
+  document.addEventListener('click', closeDropdownsOutside);
+  document.addEventListener('contextmenu', e => e.preventDefault());
+});
 
-Get ready for a cultural phenomenon! Spudy’s “Mai Vangu” is dropping this Monday, and it’s more than just a song — it’s a heartfelt tribute to the strength and love of mothers everywhere. Expect soul-stirring vocals, powerful lyrics, and a music video that will leave you speechless.
+// ── RENDER ──────────────────────────────────────────────────────────────
+function renderRecent() {
+  const grid = document.getElementById('recent-grid');
+  grid.innerHTML = songs.map(s => `
+    <div class="song-card${currentSong===s.name?' active':''}" id="card-${s.id}"
+      onclick="playSong('${s.name}','${s.genre}','${s.bg}','${s.emoji}','${s.duration}')"
+      oncontextmenu="showCtxMenu(event,'${s.name}','${s.genre}','${s.bg}','${s.emoji}','${s.duration}')">
+      <div class="song-thumb">
+        <div class="song-thumb-placeholder" style="background:${s.bg}">${s.emoji}</div>
+        <div class="song-play-overlay">
+          <div class="play-circle" onclick="event.stopPropagation();playSong('${s.name}','${s.genre}','${s.bg}','${s.emoji}','${s.duration}')">
+            <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+          <div class="more-circle" onclick="event.stopPropagation();showCtxMenu(event,'${s.name}','${s.genre}','${s.bg}','${s.emoji}','${s.duration}')">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5" fill="white"/><circle cx="12" cy="12" r="1.5" fill="white"/><circle cx="12" cy="19" r="1.5" fill="white"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="song-info">
+        <div class="song-name">${s.name}</div>
+        <div class="song-meta"><span class="song-genre">${s.genre}</span><span class="song-duration">${s.duration}</span></div>
+        <div class="song-wave">${Array.from({length:18},(_,j)=>`<div class="wave-bar" style="height:${20+Math.floor(Math.sin(j*0.8+s.id)*30)+30}%;animation-delay:${(j*0.09).toFixed(2)}s"></div>`).join('')}</div>
+      </div>
+    </div>
+  `).join('');
+}
 
-🌟 Why you can’t miss this:
-- A deeply personal anthem celebrating love and sacrifice.
-- Stunning visuals in the official music video, dropping the same day.
-- A melody that resonates with the warmth of home and the pride of our roots.
+function renderTrending() {
+  const list = document.getElementById('trending-list');
+  list.innerHTML = trending.map((t,i) => `
+    <div class="trend-item${currentSong===t.name?' playing':''}" onclick="playSong('${t.name}','${t.genre}','${t.bg}','${t.emoji}','${t.duration}')">
+      <div class="trend-num">${i+1}</div>
+      <div class="trend-rank-change ${t.change}">${t.change==='up'?'▲':t.change==='down'?'▼':'─'}</div>
+      <div class="trend-thumb" style="background:${t.bg}">${t.emoji}</div>
+      <div class="trend-info">
+        <div class="trend-name">${t.name}</div>
+        <div class="trend-detail">${t.genre}</div>
+      </div>
+      <div class="trend-right">
+        <div class="trend-plays">${t.plays}</div>
+        <button class="like-btn${likedTrending.has(t.name)?' liked':''}" onclick="event.stopPropagation();toggleTrendLike(this,'${t.name}')">
+          <svg viewBox="0 0 24 24" fill="${likedTrending.has(t.name)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <button class="trend-add-btn" onclick="event.stopPropagation();addToQueue('${t.name}')">+ Queue</button>
+        <div class="trend-duration">${t.duration}</div>
+      </div>
+    </div>
+  `).join('');
+}
 
-🚨 Mark your calendars, set your alarms, and tell your friends — this Monday is about to make history!
+function renderLibrary(filter='all') {
+  const body = document.getElementById('library-body');
+  let filtered = [...songs];
+  if (filter==='liked') filtered = songs.filter(s=>likedSongs.has(s.name)||likedTrending.has(s.name));
+  body.innerHTML = filtered.map((s,i) => `
+    <tr class="${currentSong===s.name?'playing':''}" onclick="playSong('${s.name}','${s.genre}','${s.bg}','${s.emoji}','${s.duration}')" oncontextmenu="event.preventDefault();showCtxMenu(event,'${s.name}','${s.genre}','${s.bg}','${s.emoji}','${s.duration}')">
+      <td style="color:var(--text3);font-family:'Space Mono',monospace;font-size:12px">${i+1}</td>
+      <td><div class="lib-song-cell">
+        <div class="lib-thumb" style="background:${s.bg}">${s.emoji}</div>
+        <div><div class="lib-song-name">${s.name}</div><div class="lib-song-genre">${s.genre}</div></div>
+      </div></td>
+      <td style="color:var(--text2);font-size:12px">${s.genre}</td>
+      <td class="lib-plays">${s.plays}</td>
+      <td style="font-family:'Space Mono',monospace;font-size:12px;color:var(--text3)">${s.duration}</td>
+      <td><div class="lib-actions">
+        <button class="lib-action-btn" onclick="event.stopPropagation();toggleLikeById(${s.id},'${s.name}')" title="Like">
+          <svg viewBox="0 0 24 24" fill="${likedSongs.has(s.name)?'var(--accent3)':'none'}" stroke="${likedSongs.has(s.name)?'var(--accent3)':'currentColor'}" stroke-width="2" style="width:13px;height:13px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <button class="lib-action-btn" onclick="event.stopPropagation();downloadSong()" title="Download">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+      </div></td>
+    </tr>
+  `).join('');
+  document.getElementById('lib-count-badge').textContent = songs.length;
+}
 
-👉 Stream Spudy TV now for exclusive sneak peeks, countdowns, and more.
-🎧 “Mai Vangu” — the anthem of gratitude is coming!`,
-                        category: 'entertainment',
-                        author: 'Spudy TV',
-                        date: new Date().toISOString()
-                    }
-                ];
+function renderExplore() {
+  document.getElementById('genre-grid').innerHTML = genres.map(g => `
+    <div class="genre-card" style="background:${g.color}" onclick="usePromptAndScroll('${g.prompt}');switchTab('create')">
+      <span class="gc-emoji">${g.emoji}</span>
+      <div class="gc-name">${g.name}</div>
+      <div class="gc-count">${g.count}</div>
+    </div>
+  `).join('');
+  document.getElementById('explore-new-grid').innerHTML = [...songs].reverse().map(s => `
+    <div class="song-card" onclick="playSong('${s.name}','${s.genre}','${s.bg}','${s.emoji}','${s.duration}')">
+      <div class="song-thumb">
+        <div class="song-thumb-placeholder" style="background:${s.bg}">${s.emoji}</div>
+        <div class="song-play-overlay"><div class="play-circle"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+      </div>
+      <div class="song-info">
+        <div class="song-name">${s.name}</div>
+        <div class="song-meta"><span class="song-genre">${s.genre}</span><span class="song-duration">${s.duration}</span></div>
+        <div class="song-wave">${Array.from({length:18},(_,j)=>`<div class="wave-bar" style="height:${20+Math.floor(Math.sin(j*0.9+s.id)*25)+30}%;animation-delay:${(j*0.1).toFixed(2)}s"></div>`).join('')}</div>
+      </div>
+    </div>
+  `).join('');
+}
 
-                newsArticles.forEach(news => {
-                    if (!existingNews.some(existing => existing.title === news.title)) {
-                        store.add(news).onsuccess = function() {
-                            console.log(`Added news: ${news.title}`);
-                        };
-                    }
-                });
+function renderCharts() {
+  const multis = {'today':[1.0,0.88,0.74,0.65,0.54,0.42,0.35],'week':[0.95,0.78,0.88,0.52,0.71,0.38,0.60],'month':[0.80,0.90,0.70,0.88,0.50,0.65,0.45],'all':[0.85,0.92,0.95,0.72,0.60,0.55,0.80]};
+  const m = multis[chartPeriod]||multis['today'];
+  document.getElementById('chart-body').innerHTML = trending.map((t,i) => `
+    <tr onclick="playSong('${t.name}','${t.genre}','${t.bg}','${t.emoji}','${t.duration}')">
+      <td><div class="chart-rank${i<3?' top':''}">${i+1}</div></td>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div style="width:38px;height:38px;border-radius:8px;background:${t.bg};display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">${t.emoji}</div>
+        <div><div style="font-size:13px;font-weight:600">${t.name}</div><div style="font-size:11px;color:var(--text3)">${t.genre}</div></div>
+      </div></td>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div class="chart-bar-wrap"><div class="chart-bar" style="width:${Math.round(m[i]*100)}%"></div></div>
+        <span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${Math.round(m[i]*100)}%</span>
+      </div></td>
+      <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text3)">${t.plays}</td>
+      <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text3)">${t.duration}</td>
+      <td>
+        <button class="like-btn${likedTrending.has(t.name)?' liked':''}" onclick="event.stopPropagation();toggleTrendLike(this,'${t.name}')">
+          <svg viewBox="0 0 24 24" fill="${likedTrending.has(t.name)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
 
-                transaction.oncomplete = function() {
-                    renderGallery();
-                };
-            };
-            request.onerror = function(event) {
-                console.error('Error fetching news for preload:', event.target.error);
-            };
-        }
+function renderCommunity() {
+  document.getElementById('community-feed').innerHTML = communityPosts.map((p,i) => `
+    <div class="community-post" onclick="playSong('${p.song.name}','${p.song.genre}','${p.song.bg}','${p.song.emoji}','3:20')">
+      <div class="post-header">
+        <div class="post-avatar" style="background:${p.color}22;color:${p.color};font-size:18px">${p.avatar}</div>
+        <div><div class="post-user">${p.user}</div><div class="post-time">${p.time}</div></div>
+      </div>
+      <div class="post-song" onclick="event.stopPropagation();playSong('${p.song.name}','${p.song.genre}','${p.song.bg}','${p.song.emoji}','3:20')">
+        <div class="post-song-art" style="background:${p.song.bg}">${p.song.emoji}</div>
+        <div><div class="post-song-name">${p.song.name}</div><div class="post-song-genre">${p.song.genre}</div></div>
+        <div style="margin-left:auto">
+          <div class="play-circle" style="width:32px;height:32px"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+        </div>
+      </div>
+      <div class="post-caption">${p.caption}</div>
+      <div class="post-actions">
+        <div class="post-action" id="pa-like-${i}" onclick="event.stopPropagation();togglePostLike(${i})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span id="pl-${i}">${p.likes}</span>
+        </div>
+        <div class="post-action" onclick="event.stopPropagation();showToast('Comments coming soon','info')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          ${p.comments}
+        </div>
+        <div class="post-action" onclick="event.stopPropagation();showToast('Reposted!','info')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          Repost
+        </div>
+        <div class="post-action" onclick="event.stopPropagation();showModal('share')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share
+        </div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('leaderboard-list').innerHTML = leaderboard.map((u,i) => `
+    <div class="lb-item" onclick="showToast('Viewing ${u.name}\'s profile...','info')">
+      <div class="lb-rank ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</div>
+      <div class="lb-avatar" style="background:${u.color}22;color:${u.color}">${u.avatar}</div>
+      <div class="lb-name">${u.name}</div>
+      <div class="lb-songs">${u.songs} tracks</div>
+    </div>
+  `).join('');
+}
 
-        particlesJS('particles-js', {
-            particles: {
-                number: { value: 100, density: { enable: true, value_area: 800 } },
-                color: { value: '#00c6ff' },
-                shape: { type: 'circle' },
-                opacity: { value: 0.6, random: true },
-                size: { value: 4, random: true },
-                line_linked: { enable: true, distance: 150, color: '#00c6ff', opacity: 0.5, width: 1.2 },
-                move: { enable: true, speed: 8, direction: 'none', random: false }
-            },
-            interactivity: {
-                detect_on: 'canvas',
-                events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
-                modes: { repulse: { distance: 120 }, push: { particles_nb: 5 } }
-            }
-        });
+function renderLiked() {
+  const allLiked = [...songs.filter(s=>likedSongs.has(s.name)||likedTrending.has(s.name)),
+    ...trending.filter(t=>likedTrending.has(t.name)&&!songs.find(s=>s.name===t.name)).map(t=>({...t,plays:t.plays,tags:[]}))];
+  const count = allLiked.length;
+  document.getElementById('liked-songs-count').textContent = count + ' song' + (count!==1?'s':'');
+  document.getElementById('liked-empty').style.display = count===0?'block':'none';
+  document.getElementById('liked-songs-list').innerHTML = allLiked.map((s,i) => `
+    <div class="trend-item" onclick="playSong('${s.name}','${s.genre||''}','${s.bg}','${s.emoji}','${s.duration}')">
+      <div class="trend-num">${i+1}</div>
+      <div class="trend-thumb" style="background:${s.bg}">${s.emoji}</div>
+      <div class="trend-info">
+        <div class="trend-name">${s.name}</div>
+        <div class="trend-detail">${s.genre||''}</div>
+      </div>
+      <div class="trend-right">
+        <div class="trend-plays">${s.plays}</div>
+        <div class="trend-duration">${s.duration||'3:00'}</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('liked-count-badge').textContent = count;
+}
 
-        let currentUser = null;
+function renderDetailWaveform(name) {
+  const wf = document.getElementById('detail-waveform');
+  wf.innerHTML = Array.from({length:60},(_,i)=>`<div class="detail-wave-bar" style="height:${15+Math.abs(Math.sin(i*0.4+name.length)*55)}%;animation-delay:${(i*0.04).toFixed(2)}s;background:var(--text3)"></div>`).join('');
+  const pl = document.createElement('div');
+  pl.className = 'progress-line';
+  wf.appendChild(pl);
+}
 
-        function loadTheme() {
-            const theme = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', theme);
-        }
+// ── PLAYBACK ──────────────────────────────────────────────────────────
+function playSong(name, genre, bg, emoji, duration) {
+  currentSong = name;
+  currentSongData = {name,genre,bg,emoji,duration};
+  document.getElementById('player-name').textContent = name;
+  document.getElementById('player-artist').textContent = genre + ' · AI Generated';
+  document.getElementById('player-thumb').textContent = emoji;
+  document.getElementById('player-thumb').style.background = bg;
+  const dur = duration||'3:24';
+  document.getElementById('total-time').textContent = dur;
+  const p = dur.split(':');
+  totalSeconds = parseInt(p[0])*60+parseInt(p[1]);
+  currentSeconds = 0;
+  progressVal = 0;
+  isPlaying = true;
+  document.getElementById('main-play-btn').classList.add('playing');
+  document.getElementById('player-wave').style.display = 'flex';
+  startProgress();
+  renderRecent();
+  renderTrending();
+  renderLibrary();
+  // Update share modal
+  document.getElementById('share-art').textContent = emoji;
+  document.getElementById('share-art').style.background = bg;
+  document.getElementById('share-name').textContent = name;
+  document.getElementById('share-genre').textContent = genre;
+  document.getElementById('share-id').textContent = Math.random().toString(36).substr(2,6);
+  // Update liked state
+  const lb = document.getElementById('player-like-btn');
+  if (likedSongs.has(name)||likedTrending.has(name)) lb.classList.add('liked');
+  else lb.classList.remove('liked');
+}
 
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-            closeModal('theme');
-        }
+function togglePlay() {
+  isPlaying = !isPlaying;
+  const btn = document.getElementById('main-play-btn');
+  const wave = document.getElementById('player-wave');
+  if (isPlaying) {
+    btn.classList.add('playing');
+    wave.style.display = 'flex';
+    startProgress();
+    const dw = document.getElementById('detail-waveform');
+    if (dw) dw.classList.add('playing');
+  } else {
+    btn.classList.remove('playing');
+    wave.style.display = 'none';
+    clearInterval(progressInterval);
+    const dw = document.getElementById('detail-waveform');
+    if (dw) dw.classList.remove('playing');
+  }
+}
 
-        function checkCurrentUser() {
-            const username = localStorage.getItem('currentUser');
-            if (username) {
-                const transaction = db.transaction(['users'], 'readonly');
-                const store = transaction.objectStore('users');
-                const request = store.get(username);
-                request.onsuccess = function(event) {
-                    currentUser = event.target.result;
-                    if (currentUser) {
-                        updateLoggedInUI(currentUser.username);
-                        document.body.classList.remove('inaccessible');
-                        document.getElementById('hero').classList.remove('inaccessible');
-                        document.getElementById('content').style.display = 'block';
-                        document.getElementById('navLinks').style.display = 'flex';
-                        renderGallery();
-                        scrollToContent();
-                    } else {
-                        localStorage.removeItem('currentUser');
-                        showModal('signup');
-                        lockPage();
-                    }
-                };
-                request.onerror = function(event) {
-                    console.error('Error fetching user:', event.target.error);
-                    showModal('signup');
-                    lockPage();
-                };
-            } else {
-                showModal('signup');
-                lockPage();
-            }
-        }
+function startProgress() {
+  clearInterval(progressInterval);
+  progressInterval = setInterval(() => {
+    if (currentSeconds >= totalSeconds) {
+      if (repeatMode===2) { currentSeconds=0; }
+      else { nextSong(); return; }
+    }
+    currentSeconds++;
+    progressVal = (currentSeconds/totalSeconds)*100;
+    document.getElementById('progress-fill').style.width = progressVal+'%';
+    const m = Math.floor(currentSeconds/60);
+    const s = currentSeconds%60;
+    document.getElementById('curr-time').textContent = m+':'+(s<10?'0':'')+s;
+    // Move detail waveform progress line
+    const pl = document.querySelector('#detail-waveform .progress-line');
+    if (pl) pl.style.left = progressVal+'%';
+  }, 500);
+}
 
-        function lockPage() {
-            document.body.classList.add('inaccessible');
-            document.getElementById('hero').classList.add('inaccessible');
-            document.getElementById('content').style.display = 'none';
-            document.getElementById('navLinks').style.display = 'none';
-            document.getElementById('gallery').innerHTML = '';
-            document.getElementById('accountBtn').style.display = 'block';
-            document.getElementById('accountDropdown').style.display = 'none';
-            document.getElementById('loginLink').style.display = 'none';
-            document.getElementById('signupLink').style.display = 'block';
-            document.getElementById('userIndicator').style.display = 'none';
-            document.getElementById('settingsBtn').style.display = 'none';
-        }
+function seekProgress(e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  progressVal = Math.max(0,Math.min(100,((e.clientX-rect.left)/rect.width)*100));
+  currentSeconds = Math.floor((progressVal/100)*totalSeconds);
+  document.getElementById('progress-fill').style.width = progressVal+'%';
+  const m = Math.floor(currentSeconds/60), s = currentSeconds%60;
+  document.getElementById('curr-time').textContent = m+':'+(s<10?'0':'')+s;
+}
 
-        function updateLoggedInUI(username) {
-            document.getElementById('accountBtn').style.display = 'none';
-            document.getElementById('accountDropdown').style.display = 'none';
-            document.getElementById('userIndicator').style.display = 'flex';
-            document.getElementById('loggedInUsername').textContent = username;
-            document.getElementById('settingsBtn').style.display = 'flex';
-        }
+function seekDetailWaveform(e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = Math.max(0,Math.min(100,((e.clientX-rect.left)/rect.width)*100));
+  currentSeconds = Math.floor((pct/100)*totalSeconds);
+  progressVal = pct;
+  document.getElementById('progress-fill').style.width = pct+'%';
+  const pl = document.querySelector('#detail-waveform .progress-line');
+  if (pl) pl.style.left = pct+'%';
+  if (!isPlaying) togglePlay();
+}
 
-        function validateInput(input) {
-            if (input.type === 'email') {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (emailRegex.test(input.value.trim())) {
-                    input.classList.add('valid');
-                    input.classList.remove('invalid');
-                } else {
-                    input.classList.add('invalid');
-                    input.classList.remove('valid');
-                }
-            } else if (input.value.trim()) {
-                input.classList.add('valid');
-                input.classList.remove('invalid');
-            } else {
-                input.classList.add('invalid');
-                input.classList.remove('valid');
-            }
-        }
+function prevSong() {
+  const allS = [...songs,...trending];
+  const idx = allS.findIndex(s=>s.name===currentSong);
+  if (currentSeconds>3) { currentSeconds=0; return; }
+  const prev = shuffleOn ? allS[Math.floor(Math.random()*allS.length)] : allS[(idx-1+allS.length)%allS.length];
+  playSong(prev.name,prev.genre||'',prev.bg,prev.emoji,prev.duration||'3:20');
+  showToast('Playing: '+prev.name);
+}
 
-        function login() {
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            const error = document.getElementById('loginError');
-            const notice = document.getElementById('loginNotice');
-            notice.classList.remove('active');
-            if (!username || !password) {
-                error.textContent = 'Please fill in all fields';
-                return;
-            }
-            const transaction = db.transaction(['users'], 'readonly');
-            const store = transaction.objectStore('users');
-            const request = store.get(username);
-            request.onsuccess = function(event) {
-                const user = event.target.result;
-                if (!user) {
-                    notice.classList.add('active');
-                    error.textContent = '';
-                    return;
-                }
-                if (user.password === password) {
-                    currentUser = user;
-                    localStorage.setItem('currentUser', username);
-                    updateLoggedInUI(username);
-                    closeModal('login');
-                    document.body.classList.remove('inaccessible');
-                    document.getElementById('hero').classList.remove('inaccessible');
-                    document.getElementById('content').style.display = 'block';
-                    document.getElementById('navLinks').style.display = 'flex';
-                    renderGallery();
-                    scrollToContent();
-                } else {
-                    error.textContent = 'Invalid password';
-                }
-            };
-            request.onerror = function(event) {
-                console.error('Login error:', event.target.error);
-                error.textContent = 'Error logging in. Please try again.';
-            };
-        }
+function nextSong() {
+  const allS = [...songs,...trending];
+  const idx = allS.findIndex(s=>s.name===currentSong);
+  const next = shuffleOn ? allS[Math.floor(Math.random()*allS.length)] : allS[(idx+1)%allS.length];
+  playSong(next.name,next.genre||'',next.bg,next.emoji,next.duration||'3:20');
+}
 
-        function signup() {
-            const username = document.getElementById('signupUsername').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const password = document.getElementById('signupPassword').value;
-            const error = document.getElementById('signupError');
-            if (!username || !email || !password) {
-                error.textContent = 'Please fill in all fields';
-                return;
-            }
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                error.textContent = 'Please enter a valid email address';
-                return;
-            }
-            const passwordValid = password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[!@#$%^&*]/.test(password);
-            if (!passwordValid) {
-                error.textContent = 'Password must be at least 8 characters with uppercase, lowercase, number, and special character';
-                return;
-            }
-            const transaction = db.transaction(['users'], 'readwrite');
-            const store = transaction.objectStore('users');
-            const request = store.get(username);
-            request.onsuccess = function(event) {
-                if (event.target.result) {
-                    error.textContent = 'Username already exists';
-                } else {
-                    const addRequest = store.add({ username, email, password });
-                    addRequest.onsuccess = function() {
-                        currentUser = { username, email, password };
-                        localStorage.setItem('currentUser', username);
-                        updateLoggedInUI(username);
-                        closeModal('signup');
-                        document.body.classList.remove('inaccessible');
-                        document.getElementById('hero').classList.remove('inaccessible');
-                        document.getElementById('content').style.display = 'block';
-                        document.getElementById('navLinks').style.display = 'flex';
-                        renderGallery();
-                        scrollToContent();
-                    };
-                    addRequest.onerror = function(event) {
-                        console.error('Signup error:', event.target.error);
-                        error.textContent = 'Error signing up. Please try again.';
-                    };
-                }
-            };
-            request.onerror = function(event) {
-                console.error('Signup check error:', event.target.error);
-                error.textContent = 'Error checking username. Please try again.';
-            };
-        }
+function toggleShuffle() {
+  shuffleOn = !shuffleOn;
+  document.getElementById('shuffle-btn').classList.toggle('active',shuffleOn);
+  showToast(shuffleOn?'Shuffle on':'Shuffle off');
+}
 
-        function generatePassword() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
-            let password = '';
-            for (let i = 0; i < 12; i++) {
-                password += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            while (!(password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[!@#$%^&*]/.test(password))) {
-                password = '';
-                for (let i = 0; i < 12; i++) {
-                    password += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-            }
-            document.getElementById('signupPassword').value = password;
-            document.getElementById('passwordSuggestion').textContent = `Suggested: ${password}`;
-            validateInput(document.getElementById('signupPassword'));
-        }
+function cycleRepeat() {
+  repeatMode = (repeatMode+1)%3;
+  const btn = document.getElementById('repeat-btn');
+  btn.classList.toggle('active', repeatMode>0);
+  const labels = ['Repeat off','Repeat all','Repeat one'];
+  showToast(labels[repeatMode]);
+}
 
-        function changePassword() {
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const error = document.getElementById('changePasswordError');
-            if (!currentPassword || !newPassword) {
-                error.textContent = 'Please fill in all fields';
-                return;
-            }
-            if (currentPassword !== currentUser.password) {
-                error.textContent = 'Current password is incorrect';
-                return;
-            }
-            const passwordValid = newPassword.length >= 8 && /[A-Z]/.test(newPassword) && /[a-z]/.test(newPassword) && /[0-9]/.test(newPassword) && /[!@#$%^&*]/.test(newPassword);
-            if (!passwordValid) {
-                error.textContent = 'New password must be at least 8 characters with uppercase, lowercase, number, and special character';
-                return;
-            }
-            const transaction = db.transaction(['users'], 'readwrite');
-            const store = transaction.objectStore('users');
-            const request = store.put({ username: currentUser.username, email: currentUser.email, password: newPassword });
-            request.onsuccess = function() {
-                currentUser.password = newPassword;
-                closeModal('changePassword');
-                alert('Password updated successfully!');
-            };
-            request.onerror = function(event) {
-                console.error('Change password error:', event.target.error);
-                error.textContent = 'Error updating password. Please try again.';
-            };
-        }
+function setVolume(e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  volume = Math.max(0,Math.min(100,Math.round(((e.clientX-rect.left)/rect.width)*100)));
+  document.getElementById('vol-fill').style.width = volume+'%';
+  muted = volume===0;
+}
 
-        function showAccountInfo() {
-            if (!currentUser) {
-                showModal('signup');
-                return;
-            }
-            document.getElementById('accountUsername').textContent = currentUser.username;
-            document.getElementById('accountEmail').textContent = currentUser.email || 'Not provided';
-            showModal('accountInfo');
-        }
+function toggleMute() {
+  muted = !muted;
+  if (muted) { document.getElementById('vol-fill').style.width='0%'; showToast('Muted'); }
+  else { document.getElementById('vol-fill').style.width=volume+'%'; showToast('Unmuted'); }
+}
 
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('currentUser');
-            showModal('signup');
-            lockPage();
-        }
+function setupVolumeSlider() {
+  document.getElementById('vol-slider').addEventListener('click', setVolume);
+}
 
-        function checkAuth(callback) {
-            if (currentUser) {
-                callback();
-            } else {
-                showModal('signup');
-            }
-        }
+function togglePlayerLike() {
+  if (!currentSong) return;
+  const lb = document.getElementById('player-like-btn');
+  if (likedSongs.has(currentSong)) { likedSongs.delete(currentSong); lb.classList.remove('liked'); showToast('Removed from liked'); }
+  else { likedSongs.add(currentSong); lb.classList.add('liked'); showToast('Added to liked ❤️'); }
+  renderLiked(); renderLibrary(); renderTrending();
+}
 
-        function scrollToContent() {
-            document.getElementById('content').scrollIntoView({ behavior: 'smooth' });
-        }
+function toggleLikeById(id, name) {
+  if (likedSongs.has(name)) { likedSongs.delete(name); showToast('Removed from liked'); }
+  else { likedSongs.add(name); showToast('Liked! ❤️'); }
+  renderLibrary(); renderLiked();
+}
 
-        function showModal(type) {
-            const modal = document.getElementById(`${type}Modal`);
-            modal.style.display = 'flex';
-            modal.querySelector('input')?.focus();
-        }
+function addToQueue(name) { showToast(name+' added to queue'); }
+function downloadSong() { showToast('Downloading '+( currentSong||'track')+'...'); }
+function playAllLiked() {
+  const liked = songs.filter(s=>likedSongs.has(s.name)||likedTrending.has(s.name));
+  if (liked.length>0) playSong(liked[0].name,liked[0].genre,liked[0].bg,liked[0].emoji,liked[0].duration);
+  else showToast('No liked songs yet','error');
+}
 
-        function closeModal(type) {
-            const modal = document.getElementById(`${type}Modal`);
-            modal.style.display = 'none';
-            document.getElementById(`${type}Error`).textContent = '';
-            const inputs = modal.querySelectorAll('input');
-            inputs.forEach(input => {
-                input.value = '';
-                input.classList.remove('valid', 'invalid');
-            });
-            document.getElementById('passwordSuggestion').textContent = '';
-            document.getElementById('loginNotice')?.classList.remove('active');
-        }
+// ── LIKED ──────────────────────────────────────────────────────────────
+function toggleTrendLike(btn, name) {
+  if (likedTrending.has(name)) { likedTrending.delete(name); btn.classList.remove('liked'); showToast('Unliked'); }
+  else { likedTrending.add(name); btn.classList.add('liked'); showToast('Liked! ❤️'); }
+  btn.querySelector('svg').setAttribute('fill', likedTrending.has(name)?'currentColor':'none');
+  renderLiked(); renderLibrary(currentLibFilter||'all');
+}
 
-        function switchModal(type) {
-            closeModal(type === 'login' ? 'signup' : 'login');
-            showModal(type);
-        }
+let postLikes = communityPosts.map(p=>({liked:false,count:p.likes}));
+function togglePostLike(i) {
+  postLikes[i].liked = !postLikes[i].liked;
+  postLikes[i].count += postLikes[i].liked?1:-1;
+  const el = document.getElementById('pa-like-'+i);
+  if (el) { el.classList.toggle('liked',postLikes[i].liked); document.getElementById('pl-'+i).textContent = postLikes[i].count; }
+}
 
-        document.getElementById('menuToggle').addEventListener('click', function() {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('active');
-        });
+// ── CREATE ──────────────────────────────────────────────────────────────
+function usePrompt(el, text) {
+  document.querySelectorAll('.prompt-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('prompt-input').value = text;
+  updateCharCount();
+  document.getElementById('prompt-input').focus();
+}
 
-        document.getElementById('menuToggle').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                this.click();
-            }
-        });
+function usePromptAndScroll(text) {
+  document.getElementById('prompt-input').value = text;
+  updateCharCount();
+  document.querySelector('.create-panel').scrollIntoView({behavior:'smooth',block:'center'});
+  document.getElementById('prompt-input').focus();
+}
 
-        document.getElementById('accountBtn').addEventListener('click', function() {
-            const dropdown = document.getElementById('accountDropdown');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-            this.classList.toggle('active');
-        });
+function addTag(el, tag) {
+  const ta = document.getElementById('prompt-input');
+  const v = ta.value;
+  if (!v.includes(tag)) {
+    ta.value = v ? v+', '+tag : tag;
+    el.classList.add('used');
+    updateCharCount();
+  } else {
+    ta.value = ta.value.replace(', '+tag,'').replace(tag+', ','').replace(tag,'');
+    el.classList.remove('used');
+    updateCharCount();
+  }
+}
 
-        document.getElementById('accountBtn').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                this.click();
-            }
-        });
+function updateCharCount() {
+  const v = document.getElementById('prompt-input').value.length;
+  const el = document.getElementById('char-count');
+  el.textContent = v+' / 400';
+  el.classList.toggle('warn', v>350);
+}
 
-        document.getElementById('settingsBtn').addEventListener('click', function() {
-            const dropdown = document.getElementById('settingsDropdown');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-            this.classList.toggle('active');
-        });
+function setMode(mode, el) {
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  currentMode = mode;
+  const lyricArea = document.getElementById('lyrics-area');
+  const extendArea = document.getElementById('extend-area');
+  const mainArea = document.getElementById('main-prompt-area');
+  const opts = document.querySelector('.create-options');
+  lyricArea.style.display = mode==='lyrics'?'block':'none';
+  extendArea.style.display = mode==='extend'?'block':'none';
+  mainArea.style.display = mode==='extend'?'none':'block';
+  opts.style.opacity = mode==='instrumental'?'0.4':'1';
+  opts.style.pointerEvents = mode==='instrumental'?'none':'auto';
+  if (mode==='extend') renderExtendTracks();
+  const prompts = document.getElementById('suggested-prompts');
+  prompts.style.display = mode==='lyrics'?'none':'flex';
+}
 
-        document.getElementById('settingsBtn').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                this.click();
-            }
-        });
+function renderExtendTracks() {
+  const list = document.getElementById('extend-track-list');
+  list.innerHTML = songs.map(s=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;border:1px solid var(--border)" onclick="selectExtendTrack(this,'${s.name}')" class="extend-track-item">
+      <div style="width:32px;height:32px;border-radius:6px;background:${s.bg};display:flex;align-items:center;justify-content:center;font-size:16px">${s.emoji}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${s.name}</div><div style="font-size:11px;color:var(--text3)">${s.genre} · ${s.duration}</div></div>
+      <div style="font-size:11px;color:var(--accent2);font-weight:600;opacity:0" class="select-label">SELECT</div>
+    </div>
+  `).join('');
+}
 
-        function renderGallery(filter = 'all', query = '') {
-            if (!currentUser) {
-                showModal('signup');
-                return;
-            }
-            const gallery = document.getElementById('gallery');
-            gallery.innerHTML = '';
-            const transaction = db.transaction(['news'], 'readonly');
-            const store = transaction.objectStore('news');
-            const request = store.getAll();
-            request.onsuccess = function(event) {
-                let newsList = event.target.result;
-                if (filter !== 'all') {
-                    newsList = newsList.filter(news => news.category === filter);
-                }
-                if (query) {
-                    newsList = newsList.filter(news => news.title.toLowerCase().includes(query.toLowerCase()));
-                }
-                newsList.forEach(news => {
-                    const card = document.createElement('div');
-                    card.className = 'news-card';
-                    card.tabIndex = 0;
-                    card.innerHTML = `
-                        <div class="title" aria-label="News headline: ${news.title}">${news.title}</div>
-                        <button class="read-now-btn" onclick="readNews(${news.id}, this)" aria-label="Read news: ${news.title}">Read Now</button>
-                    `;
-                    card.addEventListener('keydown', function(event) {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                            event.preventDefault();
-                            readNews(news.id, card.querySelector('.read-now-btn'));
-                        }
-                    });
-                    gallery.appendChild(card);
-                });
-            };
-            request.onerror = function(event) {
-                console.error('Error fetching news:', event.target.error);
-                alert('Failed to load news. Please try again.');
-            };
-        }
+function selectExtendTrack(el, name) {
+  document.querySelectorAll('.extend-track-item').forEach(e=>{ e.style.borderColor='var(--border)'; e.querySelector('.select-label').style.opacity='0'; });
+  el.style.borderColor='var(--accent2)';
+  el.querySelector('.select-label').style.opacity='1';
+  showToast('Extending: '+name);
+}
 
-        function readNews(id, button) {
-            if (!currentUser) {
-                showModal('signup');
-                return;
-            }
-            const transaction = db.transaction(['news'], 'readonly');
-            const store = transaction.objectStore('news');
-            const request = store.get(id);
-            request.onsuccess = function(event) {
-                const news = event.target.result;
-                if (!news) {
-                    console.error('News not found for ID:', id);
-                    alert('News article not found. Please try again.');
-                    return;
-                }
-                const newsSection = document.getElementById('newsSection');
-                const newsViewer = document.getElementById('newsViewer');
-                newsViewer.innerHTML = `
-                    <h2 class="news-title">${news.title}</h2>
-                    <div class="news-meta">By ${news.author} | ${new Date(news.date).toLocaleDateString()}</div>
-                    <div class="news-content">${news.content}</div>
-                `;
-                renderComments(id);
-                newsSection.style.display = 'flex';
-                newsViewer.focus();
-            };
-            request.onerror = function(event) {
-                console.error('Error fetching news article:', event.target.error);
-                alert('Failed to load news article. Please try again.');
-            };
-        }
+function toggleOption(el) {
+  el.classList.toggle('active');
+  const label = el.textContent.trim();
+  if (el.classList.contains('active')) showToast(label+' enabled');
+  else showToast(label+' disabled');
+}
 
-        function closeNews() {
-            const newsSection = document.getElementById('newsSection');
-            const newsViewer = document.getElementById('newsViewer');
-            newsViewer.innerHTML = '';
-            newsSection.style.display = 'none';
-        }
+function buildStyleDropdown() {
+  const container = document.getElementById('style-opts');
+  container.innerHTML = styleOptions.map(o=>`
+    <div class="style-opt" onclick="selectStyle('${o.name}')">
+      <div class="style-opt-dot" style="background:${o.dot}"></div>
+      ${o.name}
+    </div>
+  `).join('');
+}
 
-        document.querySelector('.close-news').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                closeNews();
-            }
-        });
+function selectStyle(name) {
+  document.getElementById('style-input').value = name;
+  const dd = document.getElementById('style-dropdown');
+  dd.classList.add('hidden');
+  dd.classList.remove('open');
+  showToast('Style: '+name);
+}
 
-        function renderComments(newsId) {
-            const commentsSection = document.getElementById('commentsSection');
-            commentsSection.innerHTML = `
-                <input type="text" id="commentInput" placeholder="Add a comment..." aria-label="Add a comment">
-                <button onclick="addComment(${newsId})" aria-label="Post comment">Post</button>
-            `;
-            const transaction = db.transaction(['comments'], 'readonly');
-            const store = transaction.objectStore('comments');
-            const request = store.getAll();
-            request.onsuccess = function(event) {
-                const comments = event.target.result.filter(comment => comment.newsId === newsId);
-                comments.forEach(comment => {
-                    const div = document.createElement('div');
-                    div.className = 'comment';
-                    div.innerHTML = `<p><strong>${comment.user}</strong>: ${comment.text}</p>`;
-                    commentsSection.appendChild(div);
-                });
-            };
-        }
+function generateSong() {
+  const prompt = document.getElementById('prompt-input').value.trim();
+  if (!prompt) { showToast('Please describe your song first!','error'); return; }
+  const btn = document.getElementById('gen-btn');
+  btn.classList.add('loading');
+  btn.innerHTML = `<div class="gen-spinner" style="width:13px;height:13px;border-width:2px;margin:0"></div>Generating...`;
+  const panel = document.getElementById('gen-panel');
+  panel.classList.add('visible');
+  document.getElementById('gen-prompt-label').textContent = '"'+prompt.slice(0,55)+(prompt.length>55?'...':'')+'"';
+  [1,2].forEach(n => {
+    const waveEl = document.getElementById('gen-wave-'+n);
+    waveEl.innerHTML = Array.from({length:32},(_,i)=>`<div class="gen-wave-bar" style="height:${15+Math.floor(Math.abs(Math.sin(i*0.5+n))*60)}%;animation-delay:${(i*0.04+n*0.1).toFixed(2)}s"></div>`).join('');
+  });
+  let p1=0, p2=0;
+  const etaEl = document.getElementById('gen-eta');
+  const progInterval = setInterval(()=>{
+    p1 = Math.min(100,p1+Math.random()*7);
+    p2 = Math.min(100,p2+Math.random()*5.5);
+    document.getElementById('gen-fill-1').style.width = p1+'%';
+    document.getElementById('gen-fill-2').style.width = p2+'%';
+    document.getElementById('gen-pct-1').textContent = Math.floor(p1)+'%';
+    document.getElementById('gen-pct-2').textContent = Math.floor(p2)+'%';
+    const remaining = Math.ceil((100-Math.max(p1,p2))/6);
+    etaEl.textContent = remaining>0?'ETA ~'+remaining+'s':'Almost done...';
+    if (p1>=100&&p2>=100) { clearInterval(progInterval); finishGeneration(prompt); }
+  },220);
+}
 
-        function addComment(newsId) {
-            if (!currentUser) {
-                showModal('signup');
-                return;
-            }
-            const text = document.getElementById('commentInput').value.trim();
-            if (!text) return;
-            const transaction = db.transaction(['comments'], 'readwrite');
-            const store = transaction.objectStore('comments');
-            store.add({ newsId, user: currentUser.username, text });
-            transaction.oncomplete = function() {
-                renderComments(newsId);
-                document.getElementById('commentInput').value = '';
-            };
-        }
+function finishGeneration(prompt) {
+  const emojis=['🎸','🎹','🎺','🎻','🥁','🎤','✨','💫','🌙','⚡','🌊','🔮'];
+  const bgs=['#1a0d2e','#0d1a2e','#1a2e0d','#2e1a0d','#0d2e1a','#1a1a2e','#2d0a2d','#0a1a2d'];
+  const genresList=['Electronic','Ambient','Hip Hop','Indie','Cinematic','Synthwave','Lo-fi','Pop','R&B','Jazz'];
+  const words = prompt.split(' ').filter(w=>w.length>3);
+  const cap = w => w.charAt(0).toUpperCase()+w.slice(1);
+  const title1 = words.slice(0,2).map(cap).join(' ')||'New Track';
+  const title2 = (words.slice(-2).map(cap).join(' ')||'Remix')+' (Alt)';
+  const genre = genresList[Math.floor(Math.random()*genresList.length)];
+  const tags = prompt.split(' ').filter(w=>w.length>4).slice(0,5);
+  const newSong1 = {id:Date.now(),name:title1,genre,bg:bgs[Math.floor(Math.random()*bgs.length)],emoji:emojis[Math.floor(Math.random()*emojis.length)],duration:`${Math.floor(Math.random()*2)+2}:${String(Math.floor(Math.random()*50+10)).padStart(2,'0')}`,plays:'0',tags};
+  const newSong2 = {id:Date.now()+1,name:title2,genre,bg:bgs[Math.floor(Math.random()*bgs.length)],emoji:emojis[Math.floor(Math.random()*emojis.length)],duration:`${Math.floor(Math.random()*2)+2}:${String(Math.floor(Math.random()*50+10)).padStart(2,'0')}`,plays:'0',tags};
+  songs.unshift(newSong1,newSong2);
+  if (songs.length>12) songs.splice(12);
+  document.getElementById('gen-panel').classList.remove('visible');
+  const btn = document.getElementById('gen-btn');
+  btn.classList.remove('loading');
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Create`;
+  document.getElementById('prompt-input').value = '';
+  document.getElementById('char-count').textContent = '0 / 400';
+  document.querySelectorAll('.tag').forEach(t=>t.classList.remove('used'));
+  document.querySelectorAll('.prompt-chip').forEach(c=>c.classList.remove('active'));
+  renderRecent(); renderLibrary(); renderExplore();
+  showToast('2 tracks created! 🎵');
+  playSong(title1,genre,newSong1.bg,newSong1.emoji,newSong1.duration);
+  openSongDetail(newSong1);
+}
 
-        function toggleLike(newsId, button) {
-            if (!currentUser) {
-                showModal('signup');
-                return;
-            }
-            const transaction = db.transaction(['likes'], 'readwrite');
-            const store = transaction.objectStore('likes');
-            const request = store.getAll();
-            request.onsuccess = function(event) {
-                const isLiked = event.target.result.some(like => like.newsId === newsId && like.user === currentUser.username);
-                if (isLiked) {
-                    const deleteTransaction = db.transaction(['likes'], 'readwrite');
-                    const deleteStore = deleteTransaction.objectStore('likes');
-                    deleteStore.delete(event.target.result.find(like => like.newsId === newsId && like.user === currentUser.username).id);
-                    deleteTransaction.oncomplete = function() {
-                        renderGallery();
-                    };
-                } else {
-                    store.add({ newsId, user: currentUser.username });
-                    transaction.oncomplete = function() {
-                        renderGallery();
-                    };
-                }
-            };
-        }
+function sortSongs() {
+  sortDesc = !sortDesc;
+  if (!sortDesc) songs.reverse();
+  renderRecent(); renderLibrary();
+  showToast(sortDesc?'Newest first':'Oldest first');
+}
 
-        function toggleSubscribe(newsId, button) {
-            if (!currentUser) {
-                showModal('signup');
-                return;
-            }
-            const transaction = db.transaction(['subscriptions'], 'readwrite');
-            const store = transaction.objectStore('subscriptions');
-            const request = store.getAll();
-            request.onsuccess = function(event) {
-                const isSubscribed = event.target.result.some(sub => sub.newsId === newsId && sub.user === currentUser.username);
-                if (isSubscribed) {
-                    const deleteTransaction = db.transaction(['subscriptions'], 'readwrite');
-                    const deleteStore = deleteTransaction.objectStore('subscriptions');
-                    deleteStore.delete(event.target.result.find(sub => sub.newsId === newsId && sub.user === currentUser.username).id);
-                    deleteTransaction.oncomplete = function() {
-                        renderGallery();
-                    };
-                } else {
-                    store.add({ newsId, user: currentUser.username });
-                    transaction.oncomplete = function() {
-                        renderGallery();
-                    };
-                }
-            };
-        }
+// ── SONG DETAIL ──────────────────────────────────────────────────────────
+function openSongDetail(s) {
+  const det = document.getElementById('song-detail');
+  det.style.display='block';
+  det.classList.add('visible');
+  document.getElementById('detail-art').textContent = s.emoji;
+  document.getElementById('detail-art').style.background = s.bg;
+  document.getElementById('detail-name').textContent = s.name;
+  document.getElementById('detail-genre').textContent = s.genre;
+  document.getElementById('detail-plays').textContent = s.plays||'0';
+  document.getElementById('detail-duration').textContent = s.duration;
+  document.getElementById('detail-tags').innerHTML = (s.tags||[]).map(t=>`<div class="song-detail-tag">${t}</div>`).join('');
+  renderDetailWaveform(s.name);
+  if (isPlaying) document.getElementById('detail-waveform').classList.add('playing');
+  det.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 
-        function showSubscriptions() {
-            if (!currentUser) {
-                showModal('signup');
-                return;
-            }
-            const gallery = document.getElementById('gallery');
-            gallery.innerHTML = '';
-            const transaction = db.transaction(['subscriptions'], 'readonly');
-            const store = transaction.objectStore('subscriptions');
-            const request = store.getAll();
-            request.onsuccess = function(event) {
-                const subs = event.target.result.filter(sub => sub.user === currentUser.username);
-                const newsTransaction = db.transaction(['news'], 'readonly');
-                const newsStore = newsTransaction.objectStore('news');
-                const newsRequest = newsStore.getAll();
-                newsRequest.onsuccess = function(event) {
-                    const newsList = event.target.result.filter(news => subs.some(sub => sub.newsId === news.id));
-                    newsList.forEach(news => {
-                        const card = document.createElement('div');
-                        card.className = 'news-card';
-                        card.tabIndex = 0;
-                        card.innerHTML = `
-                            <div class="title" aria-label="News headline: ${news.title}">${news.title}</div>
-                            <button class="read-now-btn" onclick="readNews(${news.id}, this)" aria-label="Read news: ${news.title}">Read Now</button>
-                        `;
-                        card.addEventListener('keydown', function(event) {
-                            if (event.key === 'Enter' || event.key === ' ') {
-                                event.preventDefault();
-                                readNews(news.id, card.querySelector('.read-now-btn'));
-                            }
-                        });
-                        gallery.appendChild(card);
-                    });
-                };
-            };
-        }
+function closeSongDetail() {
+  const det = document.getElementById('song-detail');
+  det.classList.remove('visible');
+  setTimeout(()=>{ det.style.display='none'; },200);
+}
 
-        document.getElementById('searchBar').addEventListener('input', function(e) {
-            renderGallery(document.getElementById('categoryFilter').value, e.target.value);
-        });
+// ── TABS ──────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  const tabs = ['create','library','explore','charts','community','liked'];
+  tabs.forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+    document.getElementById('nav-'+t)?.classList.toggle('active', t===tab);
+  });
+  const titles = {create:'Create',library:'My Library',explore:'Explore',charts:'Charts',community:'Community',liked:'Liked Songs'};
+  const subs = {create:'AI Music Generator',library:'Your collection',explore:'Browse genres',charts:'Top tracks',community:'What\'s trending',liked:'Your favorites'};
+  document.getElementById('topbar-title').textContent = titles[tab]||tab;
+  document.getElementById('topbar-sub').textContent = subs[tab]||'';
+  if (tab==='liked') renderLiked();
+  if (tab==='library') renderLibrary(currentLibFilter||'all');
+  if (tab==='explore') renderExplore();
+  if (tab==='charts') renderCharts();
+  if (tab==='community') renderCommunity();
+}
 
-        document.getElementById('categoryFilter').addEventListener('change', function(e) {
-            renderGallery(e.target.value, document.getElementById('searchBar').value);
-        });
+let currentLibFilter = 'all';
+function filterLibrary(filter, el) {
+  currentLibFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderLibrary(filter);
+}
 
-        function filterCategory(category) {
-            document.getElementById('categoryFilter').value = category;
-            renderGallery(category, document.getElementById('searchBar').value);
-        }
+function setChartPeriod(period, el) {
+  chartPeriod = period;
+  document.querySelectorAll('.chart-period-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderCharts();
+}
 
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                const modals = document.querySelectorAll('.modal');
-                modals.forEach(modal => {
-                    if (modal.style.display === 'flex') {
-                        closeModal(modal.id.replace('Modal', ''));
-                    }
-                });
-                if (document.getElementById('newsSection').style.display === 'flex') {
-                    closeNews();
-                }
-            }
-        });
+// ── CONTEXT MENU ──────────────────────────────────────────────────────────
+function showCtxMenu(e, name, genre, bg, emoji, duration) {
+  e.preventDefault();
+  e.stopPropagation();
+  currentCtxSong = {name,genre,bg,emoji,duration};
+  const menu = document.getElementById('ctx-menu');
+  menu.classList.remove('hidden');
+  const x = Math.min(e.clientX, window.innerWidth-190);
+  const y = Math.min(e.clientY, window.innerHeight-280);
+  menu.style.left = x+'px';
+  menu.style.top = y+'px';
+}
 
-        renderGallery();
-    </script>
+function ctxAction(action) {
+  const s = currentCtxSong;
+  if (!s) return;
+  document.getElementById('ctx-menu').classList.add('hidden');
+  if (action==='play') { playSong(s.name,s.genre,s.bg,s.emoji,s.duration); }
+  else if (action==='next') showToast(s.name+' queued next');
+  else if (action==='queue') addToQueue(s.name);
+  else if (action==='like') { likedSongs.add(s.name); renderLiked(); showToast('Liked! ❤️'); }
+  else if (action==='share') showModal('share');
+  else if (action==='download') downloadSong();
+  else if (action==='detail') { const sd = songs.find(x=>x.name===s.name); if(sd) openSongDetail(sd); }
+  else if (action==='delete') { const i=songs.findIndex(x=>x.name===s.name); if(i>-1){ songs.splice(i,1); renderRecent(); renderLibrary(); showToast('Track deleted','error'); } }
+}
+
+// ── MODALS ──────────────────────────────────────────────────────────────
+function showModal(id) {
+  closeDropdowns();
+  document.getElementById('modal-overlay').classList.remove('hidden');
+  ['upgrade','share'].forEach(m=>{
+    document.getElementById('modal-'+m).style.display = m===id?'block':'none';
+  });
+}
+
+function closeModal(e) {
+  if (!e||e.target===document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.add('hidden');
+  }
+}
+
+function selectPlan(plan) {
+  closeModal({target:document.getElementById('modal-overlay')});
+  showToast('Redirecting to '+plan+' checkout...');
+}
+
+// ── DROPDOWNS ──────────────────────────────────────────────────────────────
+const dropdowns = ['model-dropdown','user-dropdown','style-dropdown'];
+
+function toggleDropdown(id) {
+  const el = document.getElementById(id);
+  const isHidden = el.classList.contains('hidden');
+  closeDropdowns();
+  if (isHidden) {
+    el.classList.remove('hidden');
+    el.classList.add('open');
+    if (id==='model-btn') document.getElementById('model-btn').classList.add('active');
+  }
+}
+
+function closeDropdowns() {
+  dropdowns.forEach(d=>{
+    const el = document.getElementById(d);
+    if (el) { el.classList.add('hidden'); el.classList.remove('open'); }
+  });
+  document.getElementById('model-btn')?.classList.remove('active');
+  document.getElementById('ctx-menu').classList.add('hidden');
+}
+
+function closeDropdownsOutside(e) {
+  if (!e.target.closest('.dropdown')&&!e.target.closest('.btn-ghost')&&!e.target.closest('.user-avatar')&&!e.target.closest('.style-input-wrap')&&!e.target.closest('.ctx-menu')) {
+    closeDropdowns();
+  }
+}
+
+function selectModel(name, label) {
+  document.getElementById('model-btn').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>${name}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:10px;height:10px"><polyline points="6 9 12 15 18 9"/></svg>`;
+  closeDropdowns();
+  showToast('Model: '+name);
+}
+
+// ── MISC ──────────────────────────────────────────────────────────────
+function goHome() {
+  switchTab('create');
+  showToast('Home');
+}
+
+function copyLink() {
+  const id = document.getElementById('share-id').textContent;
+  navigator.clipboard?.writeText('https://spudy.ai/track/'+id).catch(()=>{});
+  showToast('Link copied!');
+}
+
+function shareVia(platform) {
+  showToast('Opening '+platform+'...');
+  closeModal({target:document.getElementById('modal-overlay')});
+}
+
+let toastTimer;
+function showToast(msg, type='success') {
+  clearTimeout(toastTimer);
+  const t = document.getElementById('toast');
+  const dot = document.getElementById('toast-dot');
+  document.getElementById('toast-msg').textContent = msg;
+  dot.className = 'toast-dot'+(type==='error'?' error':type==='info'?' info':'');
+  t.classList.add('show');
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+</script>
 </body>
 </html>
